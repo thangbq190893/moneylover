@@ -53,7 +53,7 @@
                                         <i class="fa fa-trash red"></i>
                                     </button>
                                 </td>
-                                <td >
+                                <td align="center">
                                     <button @click="ListTransaction(wl.id)">
                                         <i class="fas fa-list blue"></i>
                                     </button>
@@ -108,7 +108,7 @@
                                     <input class="item" v-model="cash" type="number">
                                     <p>Currency</p>
                                     <select @change="getItem($event)">
-                                        <option value="">Choose Currency</option>
+                                        <option selected="selected">Choose Currency</option>
                                         <option v-for="curr in currency" :value="curr.id">{{ curr.name }}
                                         </option>
                                     </select>
@@ -136,18 +136,12 @@
                     </div>
                     <div class="modal-body">
                         <div class="row justify-content-center">
-                            <form action="./api/wallet" method="patch" @submit.prevent="EditWallet()" class="col-lg-6">
+                            <form action="./api/wallet" method="patch" @submit.prevent="EditWallet()" class="col-lg-7">
                                 <ul class="list-group-item">
                                     <p>Tên Ví</p>
                                     <input class="item" name="name" v-model="name" type="text">
                                     <p>Total</p>
-                                    <input class="item" v-model="cash" type="number">
-                                    <p>Currency</p>
-                                    <select @change="getItem($event)">
-                                        <option value="" disabled>{{ currency_name }}</option>
-                                        <option v-for="curr in currency" :value="curr.id">{{ curr.name }}
-                                        </option>
-                                    </select>
+                                    <input class="item" v-model="cash" type="number">{{currency_name}}
                                 </ul>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -246,8 +240,7 @@
                     "id": this.wallet_id,
                     "name": this.name,
                     "cash": this.cash,
-                    "curency_id": this.currency_id
-                };
+                };console.log(params);
                 this.API.patch('/api/wallet/' + this.wallet_id, params)
                     .then((response) => {
                         const wl = response.data;
@@ -257,7 +250,6 @@
             },
             DeleteWallet(id, ID) {
                 this.API.delete('/api/wallet/' + id);
-                console.log(ID+(this.currentPage-1)*this.pageSize);
                 this.wallets.splice(ID+(this.currentPage-1)*this.pageSize, 1);
             },
             ListTransaction(id) {
@@ -271,10 +263,13 @@
                     })
             },
             NewModal() {
+                this.name= "";
+                this.cash= "";
+                this.currency_id="";
                 $('#addNew').modal('show');
             },
             EditModal(id, ID) {
-                this.n = ID;
+                this.n = ID + (this.currentPage-1)*this.pageSize;
                 this.wallet_id = id;
                 this.API.get('/api/wallet/' + id)
                     .then((response) => {

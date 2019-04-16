@@ -5,7 +5,9 @@ import Register from './components/user/Register.vue';
 import ManagerWallet from './components/Manager Wallet/ManagerWallet.vue'
 import DashBoard from './components/views/DashBoard.vue'
 import Transaction from './components/views/Transactions.vue'
-import ActivityGrap from './components/ActivityGrap/ActivityGrap.vue'
+import ActivityGrap from './components/ActivityGrap/ActivityGrap.vue';
+import DonutChart from './components/ActivityGrap/DonutChart.vue';
+import Profile from './components/user/Profile.vue';
 
 Vue.use(Router);
 
@@ -23,14 +25,20 @@ const router = new Router({
             component: Register
         },
         {
+            path: '/profile',
+            name: 'profile',
+            component: Profile,
+            meta: { requiresAuth: true }
+        }
+        , {
             path: '/manager-wallet',
             name: 'manager-wallet',
             component: ManagerWallet,
             meta: { requiresAuth: true }
         },{
-            path: '/dashboard',
-            name: 'dashboard',
-            component: DashBoard,
+            path: '/chart1',
+            name: 'chart1',
+            component: ActivityGrap,
             meta: { requiresAuth: true }
         },{
             path: '/wallet/:id',
@@ -40,7 +48,7 @@ const router = new Router({
         },{
             path: '/chart',
             name: 'chart',
-            component: ActivityGrap,
+            component: DonutChart,
             meta: { requiresAuth: true }
         },
     ],

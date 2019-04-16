@@ -48,11 +48,10 @@
                     .then((res) => {
                         const token = res.data.token;
                         if (token == null) {
-                            alert("Login failed please try again")
+                            alert("user name or password is incorrect");
                             this.$router.push({name: 'login'})
                         } else {
-
-                            window.$cookies.set('token',token,30);
+                            window.$cookies.set('token',token);
                             EventBus.$emit('token', token);
                             this.email = '';
                             this.password = '';
@@ -67,12 +66,11 @@
                                     const email = response.data.email;
                                     const created_at = response.data.created_at;
                                     EventBus.$emit('name', name);
-
                                     window.$cookies.set('id', id);
                                     window.$cookies.set('name', name);
                                     window.$cookies.set('email', email);
                                     window.$cookies.set('created_at', created_at);
-                                    this.$router.push({name: 'dashboard'});
+                                    this.$router.push({name: 'chart'});
                                 });
                         }
                     })

@@ -21,7 +21,7 @@
         </div>
         <!-- /.card-header -->
         <div class="card-body">
-            <div id="example2_wrapper" class="dataTables_wrapper dt-bootstrap4">
+            <div class="dataTables_wrapper dt-bootstrap4">
                 <div class="row">
                     <div class="col-sm-12 col-md-6">
 
@@ -32,9 +32,8 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        <table id="example2" class="table table-bordered table-hover dataTable" role="grid"
-                               aria-describedby="example2_info">
-                            <thead>
+                        <table class="table table-bordered table-hover" role="grid">
+                            <thead class="thead-dark">
                             <tr role="row">
                                 <th rowspan="1" colspan="1" class="navbar-header navbar-right" @click="sort('item')">
                                     Name
@@ -64,7 +63,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr role="row" v-for="(trs,id) in orderbyTransactions ">
+                            <tr class="table-success" role="row" v-for="(trs,id) in orderbyTransactions ">
                                 <td rowspan="1" colspan="1">{{trs.item}}</td>
                                 <td rowspan="1" colspan="1">{{trs.cost}} {{trs.currency_name}}</td>
                                 <th rowspan="1" colspan="1">{{trs.event}}</th>
@@ -72,12 +71,13 @@
                                 <th rowspan="1" colspan="1">{{trs.with_people}}</th>
                                 <th rowspan="1" colspan="1">{{trs.date}}</th>
                                 <td rowspan="1" colspan="1">
-                                    <a @click="editTransaction(trs.id,id)">
+                                    <button @click="editTransaction(trs.id,id)">
                                         <i class="fa fa-edit blue"></i>
-                                    </a> /
-                                    <a @click="deleteTransaction(trs.id,id)">
+                                    </button>
+                                    /
+                                    <button @click="deleteTransaction(trs.id,id)">
                                         <i class="fa fa-trash red"></i>
-                                    </a>
+                                    </button>
                                 </td>
                             </tr>
                             </tbody>
@@ -192,7 +192,7 @@
                                 </ul>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-                                    <button type="submit" class="btn btn-primary">Create</button>
+                                    <button type="submit" class="btn btn-primary">Edit</button>
                                 </div>
                             </form>
                         </div>
@@ -207,11 +207,12 @@
 <script>
 
     export default {
-        components: {
-        },
+        components: {},
         data() {
             return {
                 //add trans
+                trans_id: "",
+                errors: "",
                 event: "",
                 cost: "",
                 note: "",
@@ -246,13 +247,13 @@
         },
         computed: {
             orderbyTransactions: function () {
-                if (this.transact instanceof Array){
+                if (this.transact instanceof Array) {
                     return this.transact.sort((a, b) => {
                         let modifier = 1;
                         if (this.currentSortDir === 'desc') modifier = -1;
-                        if (a[this.currentSort] < b[this.currentSort]){
+                        if (a[this.currentSort] < b[this.currentSort]) {
                             return -1 * modifier;
-                        } else if (a[this.currentSort] > b[this.currentSort]){
+                        } else if (a[this.currentSort] > b[this.currentSort]) {
                             return modifier;
                         } else
                             return 0;
@@ -279,7 +280,6 @@
                 this.API.get(url)
                     .then((response) => {
                         this.transact = response.data;
-                        console.log(this.transact)
                     })
             },
             // search transaction in wallet
@@ -315,6 +315,10 @@
             },
             // add-transaction
             NewTransaction() {
+                this.cost = "";
+                this.event = "";
+                this.note = "";
+                this.with_people = "";
                 $('#AddTrans').modal('show')
             },
             getItem(event) {
@@ -335,17 +339,13 @@
                     note: this.note,
                     with_people: this.with_people
                 };
-                if (window.$cookies.get('token')){
+                if (window.$cookies.get('token')) {
                     this.API.post('/api/transaction', params).then((response) => {
-                        if (this.transact instanceof Array){
-                            console.log('mảng hiện tại if',this.transact, this.transact.length);
+                        if (this.transact instanceof Array) {
                             this.transact.push(response.data);
-                            console.log('Dữ liệu sau khi thêm if',this.transact, this.transact.length);
                         }
                         else {
-                            console.log('mảng hiện tại else',this.transact);
                             this.transact.push(response.data);
-                            console.log('mảng đã thêm else',this.transact, this.transact.length);
                         }
                     });
                     $('#AddTrans').modal('hide');
@@ -356,6 +356,8 @@
             },
             // Update transaction
             editTransaction(trans_id, id) {
+                this.n = id+ (this.currentPage-1)*this.pageSize;
+                this.trans_id = trans_id;
                 this.API.get('/api/transaction/' + trans_id)
                     .then((response) => {
                             this.item_name = response.data.item;
@@ -363,18 +365,40 @@
                             this.note = response.data.note;
                             this.event = response.data.event;
                             this.with_people = response.data.with_people;
-                            console.log(this.item_name, this.cost, this.note, this.event, this.with_people)
+                            $('#EditTrans').modal('show');
                         }
                     )
+            },
+            editTrans() {
+                var params = {
+                    wallet_id: this.$route.params.id,
+                    item_id: this.item_id,
+                    event: this.event,
+                    cost: this.cost,
+                    note: this.note,
+                    with_people: this.with_people
+                };
+                if (window.$cookies.get('token')) {
+                    this.API.patch('/api/transaction/' + this.trans_id, params).then((response) => {
+                        const trs = response.data;
+                        this.transact.splice(this.n, 1);
+                        this.transact.push(trs);
+                    });
+                    $('#EditTrans').modal('hide');
+                } else {
+                    alert("phien lam viec qua han")
+                    this.$router.push('/login')
+                }
+
             },
             // Delete transaction
             deleteTransaction(trans_id, id) {
                 this.n = id + (this.currentPage - 1) * this.pageSize;
                 this.API.delete('/api/transaction/' + trans_id)
                     .then((res) => {
-                        this.transact.splice(this.n);
+                        this.transact.splice(this.n, 1);
                         alert(res.data.Delete)
-                })
+                    })
             }
         },
         watch: {

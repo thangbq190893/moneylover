@@ -50,7 +50,7 @@ class TransactionController extends Controller
         } else {
             $transaction->wallet_id = $request->wallet_id;
             $transaction->event = $request->event;
-            $transaction->date = Carbon::now()->toDateTimeString();
+            $transaction->date = Carbon::now()->toDateString();
             $transaction->cost = $request->cost;
             $transaction->note = $request->note;
             $transaction->with_people = $request->with_people;
@@ -96,8 +96,8 @@ class TransactionController extends Controller
     {
         $transaction = Transaction::findOrFail($id);
         $validation = Validator::make($request->all(), [
-            'category_id' => 'required',
-            'cost' => 'required|number'
+            'item_id' => 'required',
+            'cost' => 'required'
         ]);
         if ($validation->fails()) {
             $errors = $validation->errors();
@@ -106,7 +106,7 @@ class TransactionController extends Controller
         } else {
             $transaction->wallet_id = $request->wallet_id;
             $transaction->event = $request->event;
-            $transaction->date = Carbon::now();
+            $transaction->date = Carbon::now()->toDateString();
             $transaction->cost = $request->cost;
             $transaction->note = $request->note;
             $transaction->with_people = $request->with_people;

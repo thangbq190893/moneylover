@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Model\HistoryWallet;
 use App\Http\Model\Wallet;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Validator;
@@ -65,21 +67,28 @@ class WalletController extends Controller
         $wallet =Wallet::findOrFail($id);
         $validation=Validator::make($request->all(),[
             "name"=>'required',
-            "cash"=>'required',
-            "curency_id"=>'required'
+            "cash"=>'required'
         ]);
         if($validation->fails()){
             $errors = $validation->errors();
 
             return $errors->toJson();
         }else{
+//            Create history change
+            $history=new HistoryWallet();
+            $history->wallet_id= $id;
+            $history->old_name=$wallet->name;
+            $history->new_name=$request->name;
+            $history->old_cash= $wallet->cash;
+            $history->new_cash =$request->cash;
+            $history->date = Carbon::now();
+            $history->save();
+//            Add wallet
             $wallet->name=$request->name;
             $wallet->cash=$request->cash;
             $wallet->user_id=$user_id;
-            $wallet->curency_id=$request->curency_id;
             $wallet->save();
-            $wl= Wallet::where('id',$id)->first();
-            return response()->json($wl);
+            return response()->json($wallet);
         }
 
     }

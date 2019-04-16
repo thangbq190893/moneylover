@@ -32,6 +32,7 @@ return array(
     'App\\Http\\Middleware\\VerifyCsrfToken' => $baseDir . '/app/Http/Middleware/VerifyCsrfToken.php',
     'App\\Http\\Model\\Category' => $baseDir . '/app/Http/Model/Category.php',
     'App\\Http\\Model\\Currency' => $baseDir . '/app/Http/Model/Currency.php',
+    'App\\Http\\Model\\HistoryWallet' => $baseDir . '/app/Http/Model/HistoryWallet.php',
     'App\\Http\\Model\\Item' => $baseDir . '/app/Http/Model/Item.php',
     'App\\Http\\Model\\Transaction' => $baseDir . '/app/Http/Model/Transaction.php',
     'App\\Http\\Model\\Wallet' => $baseDir . '/app/Http/Model/Wallet.php',
