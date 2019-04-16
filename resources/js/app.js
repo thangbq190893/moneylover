@@ -12,7 +12,10 @@ import App from './components/App.vue';
 import router from './router.js';
 import Axios from 'axios';
 import VueCookies from 'vue-cookies';
+import Donut from 'vue-css-donut-chart';
+import 'vue-css-donut-chart/dist/vcdonut.css';
 
+Vue.use(Donut);
 Vue.use(VueCookies);
 VueCookies.config('7d');
 Vue.filter('formatMoney', function (value) {

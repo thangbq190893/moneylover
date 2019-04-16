@@ -16,43 +16,47 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        <table class="table table-bordered table-hover dataTable" role="grid"
-                               aria-describedby="example2_info">
+                        <table class="table table-bordered table-hover dataTable" role="grid">
                             <thead>
                             <tr role="row" class="alert-danger font-weight-bolder">
-                                <th rowspan="1" colspan="1" class="navbar-header navbar-right " @click="sort('id')">
-                                    STT &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;
+                                <th @click="sort('id')">
+                                    STT &emsp;
                                     <button class="fa far fa-sort "></button>
                                 </th>
-                                <th rowspan="1" colspan="1" class="navbar-header navbar-right" @click="sort('name')">
-                                    Name &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;
+                                <th  @click="sort('name')">
+                                    Name &emsp; &emsp; &emsp; &emsp;
                                     <button class="fa far fa-sort "></button>
                                 </th>
-                                <th rowspan="1" colspan="1" class="navbar-header navbar-right" @click="sort('cash')">
-                                    Cash &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp; &emsp;
+                                <th  @click="sort('cash')">
+                                    Cash &emsp; &emsp; &emsp; &emsp; &emsp;
                                     <button class="fa far fa-sort"></button>
                                 </th>
-                                <th rowspan="1" colspan="1" class="navbar-header navbar-right" @click="sort('pay')">
-                                    Current Money &emsp; &emsp; &emsp; &emsp;
+                                <th  @click="sort('pay')">
+                                    Current Money &emsp; &emsp;
                                     <button class="fa far fa-sort"></button>
                                 </th>
-                                <th rowspan="1" colspan="1">Modify</th>
+                                <th >Modify</th>
+                                <th >List Transaction </th>
                             </tr>
                             </thead>
                             <tbody>
-                            <tr role="row" v-for="(wl,id) in orderbyWallets " class="orange">
-                                <td rowspan="1" colspan="1">{{id}}</td>
-                                <td rowspan="1" colspan="1">{{wl.name}}</td>
-                                <td rowspan="1" colspan="1">{{ wl.cash  | formatMoney}} {{wl.currency_name}}</td>
-                                <th rowspan="1" colspan="1">{{wl.pay | formatMoney}} {{wl.currency_name}}</th>
-
-                                <td rowspan="1" colspan="1">
-                                    <a href="#" @click="EditModal(wl.id,id)">
+                            <tr role="row" v-for="(wl,id) in orderbyWallets ">
+                                <td >{{id}}</td>
+                                <td >{{wl.name}}</td>
+                                <td >{{ wl.cash  | formatMoney}} {{wl.currency_name}}</td>
+                                <td >{{wl.pay | formatMoney}} {{wl.currency_name}}</td>
+                                <td class="hover">
+                                    <button @click="EditModal(wl.id,id)">
                                         <i class="fa fa-edit blue"></i>
-                                    </a> /
-                                    <a href="#" @click="DeleteWallet(wl.id,id)">
+                                    </button> /
+                                    <button @click="DeleteWallet(wl.id,id)">
                                         <i class="fa fa-trash red"></i>
-                                    </a>
+                                    </button>
+                                </td>
+                                <td >
+                                    <button @click="ListTransaction(wl.id)">
+                                        <i class="fas fa-list blue"></i>
+                                    </button>
                                 </td>
                             </tr>
                             </tbody>
@@ -255,6 +259,9 @@
                 this.API.delete('/api/wallet/' + id);
                 console.log(ID+(this.currentPage-1)*this.pageSize);
                 this.wallets.splice(ID+(this.currentPage-1)*this.pageSize, 1);
+            },
+            ListTransaction(id) {
+                this.$router.push({name: 'transactions',params: {id}})
             },
             // get list transaction in wallet
             getListWallet() {
