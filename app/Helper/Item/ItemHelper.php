@@ -2,6 +2,7 @@
 
 namespace App\Helper\Item;
 
+use App\Http\Model\Category;
 use App\Http\Model\Currency;
 use App\Http\Model\Item;
 
@@ -14,7 +15,12 @@ class ItemHelper
     }
     public static function get_currencyname($id)
     {
-        $item = Currency::where('id', $id)->first();
-        return (isset($item->name) ? $item->name : null);
+        $currency = Currency::where('id', $id)->first();
+        return (isset($currency->name) ? $currency->name : null);
+    }
+    public static function get_categoryid($id)
+    {
+        $item = Item::where('id', $id)->first();
+        return (isset($item->category_id) ? $item->category_id : null);
     }
 }

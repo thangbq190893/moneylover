@@ -2,13 +2,14 @@
 
 namespace App\Http\Model;
 
+use App\Helper\Item\ItemHelper;
 use Illuminate\Database\Eloquent\Model;
 class Transaction extends Model
 {
-    protected $appends=['walletname','item','currency_name','breadcrumb'];
+    protected $appends=['walletname','item','currency_name','category_id'];
     protected $visible=['id','category_id','wallet_id','cost', 'walletname','date','item','currency_name','event','note','with_people'];
     protected $table='transactions';
-    protected $fillable=['category_id','wallet_id','cost','date'];
+    protected $fillable=['wallet_id','cost','date'];
 
     public function wallet(){
         return $this->belongsTo(Wallet::class,'wallet_id');
@@ -31,14 +32,9 @@ class Transaction extends Model
         $currency_id=Wallet::find($wallet_id)->first()->getCurrencyNameAttribute();
         return $currency_id;
     }
-    public function getBreadcrumbAttribute()
+    public function getCategoryIdAttribute()
     {
-        $wallet = $this->wallet;
-        return [
-            [ 'title' => 'Home', 'link' => '/' ],
-            [ 'title' => $wallet->name, 'link' => "/wallet/$wallet->id"],
-            [ 'title' => $this->date, 'link' => "/transaction/$this->id"]
-        ];
+        return ItemHelper::get_categoryid($this->item_id);
     }
 
 }

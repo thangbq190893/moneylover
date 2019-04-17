@@ -35,7 +35,7 @@
                     <!-- Add icons to the links using the .nav-icon class
                          with font-awesome or any other icon font library -->
                     <li class="nav-item">
-                        <router-link  to="/dashboard" class="nav-link">
+                        <router-link  to="/chart" class="nav-link">
                             <i class="nav-icon fas fa-tachometer-alt blue"></i>
                             <p>
                                 Dashboard
@@ -59,7 +59,7 @@
                                 </router-link>
                             </li>
                             <li class="nav-item">
-                                <router-link tag="a" to="/chart" class="nav-link active">
+                                <router-link tag="a" to="/chart1" class="nav-link active">
                                     <i class="fa fa-circle-o nav-icon"></i>
                                     <p>Inactive Page</p>
                                 </router-link>
@@ -67,12 +67,12 @@
                         </ul>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="nav-link">
+                        <router-link to="/profile" class="nav-link">
                             <i class="nav-icon fas fa-user pink"></i>
                             <p>
                                 Profile
                             </p>
-                        </a>
+                        </router-link>
                     </li>
                     <li v-if="name" class="nav-item ">
                         <a class="nav-link" href="" v-on:click="logout()">
@@ -93,7 +93,7 @@
     export default {
         data(){
             return {
-                name: localStorage.name,
+                name: window.$cookies.get('name'),
                 token: window.$cookies.get('token'),
                 email: "",
                 id: ""
@@ -102,7 +102,7 @@
         mounted() {
             EventBus.$on('name', (name) => {
                 this.name = name;
-            })
+            });
             EventBus.$on('token', (token)=> {
                 this.token = token;
             })
@@ -119,10 +119,6 @@
             },
         },
         watch: {
-            token(newValue){
-                window.$cookies.set('token',newValue);
-                this.token = window.$cookies.get('token');
-            }
         },
 
     }

@@ -494,6 +494,7 @@ class ComposerStaticInitff9096546ff91d0165e008d4dd9df8cb
         'App\\Http\\Middleware\\VerifyCsrfToken' => __DIR__ . '/../..' . '/app/Http/Middleware/VerifyCsrfToken.php',
         'App\\Http\\Model\\Category' => __DIR__ . '/../..' . '/app/Http/Model/Category.php',
         'App\\Http\\Model\\Currency' => __DIR__ . '/../..' . '/app/Http/Model/Currency.php',
+        'App\\Http\\Model\\HistoryWallet' => __DIR__ . '/../..' . '/app/Http/Model/HistoryWallet.php',
         'App\\Http\\Model\\Item' => __DIR__ . '/../..' . '/app/Http/Model/Item.php',
         'App\\Http\\Model\\Transaction' => __DIR__ . '/../..' . '/app/Http/Model/Transaction.php',
         'App\\Http\\Model\\Wallet' => __DIR__ . '/../..' . '/app/Http/Model/Wallet.php',

@@ -17,9 +17,9 @@ import 'vue-css-donut-chart/dist/vcdonut.css';
 
 Vue.use(Donut);
 Vue.use(VueCookies);
-VueCookies.config('7d');
+VueCookies.config(300);
 Vue.filter('formatMoney', function (value) {
-    let val = (value/1).toFixed(2).replace('.', ',')
+    let val = (value/1).toFixed(2).replace('.', ',');
     return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
 });
 
@@ -27,7 +27,7 @@ Vue.prototype.$http = Axios.create({
     baseURL: 'http://127.0.0.1:8000',
     headers: {
         "Content-Type": "application/json",
-        'Authorization': 'Bearer ' + localStorage.token
+        'Authorization': 'Bearer ' + window.$cookies.get('token')
     },
     timeout: 999999
 });

@@ -20,6 +20,9 @@ class Wallet extends Model
     public function currency(){
         return $this->belongsTo(Currency::class,'curency_id');
     }
+    public function HistoryWallet(){
+        return $this->hasMany(HistoryWallet::class,'wallet_id');
+    }
     public function getUserNameAttribute(){
         $user_id=$this->user_id;
         $user_name=User::find($user_id)->first()->name;

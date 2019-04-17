@@ -1,6 +1,7 @@
 <template >
     <div class="container container-fluid" style="width: 600px; height: 800px">
-        <line-chart :charData="data" :option="options"></line-chart>
+        <!--<line-chart :charData="data" :option="options"></line-chart>-->
+        <vc-donut :charData="data" :option="options"></vc-donut>
     </div>
 
 </template>
