@@ -2,10 +2,8 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Login from './components/user/Login.vue';
 import Register from './components/user/Register.vue';
-import ManagerWallet from './components/Manager Wallet/ManagerWallet.vue'
-import DashBoard from './components/views/DashBoard.vue'
-import Transaction from './components/views/Transactions.vue'
-import ActivityGrap from './components/ActivityGrap/ActivityGrap.vue';
+import ManagerWallet from './components/ManagerWallet/ManagerWallet.vue'
+import Transaction from './components/ManagerWallet/Transactions.vue'
 import DonutChart from './components/ActivityGrap/DonutChart.vue';
 import Profile from './components/user/Profile.vue';
 
@@ -34,11 +32,6 @@ const router = new Router({
             path: '/manager-wallet',
             name: 'manager-wallet',
             component: ManagerWallet,
-            meta: { requiresAuth: true }
-        },{
-            path: '/chart1',
-            name: 'chart1',
-            component: ActivityGrap,
             meta: { requiresAuth: true }
         },{
             path: '/wallet/:id',

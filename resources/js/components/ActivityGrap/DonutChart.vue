@@ -59,11 +59,10 @@
             getIdWallet(event) {
                 if (window.$cookies.get('token')){
                     this.wallet_id = event.target.value;
-                    console.log(this.wallet_id);
                     this.DEBT_LOAN = 0;
                     this.EXPENSE =0;
                     this.INCOME =0;
-                    if (this.wallet_id==0){
+                    if (this.wallet_id == 0){
                         this.sections[0].value=0;
                         this.sections[1].value=0;
                         this.sections[2].value=0;
@@ -106,14 +105,12 @@
                                 this.sections[2].value = (this.INCOME / this.total) * 100;
                                 this.sections[1].value = 100 - this.sections[0].value - this.sections[2].value;
                                 this.sections[3].value = 0;
-                                console.log('am')
                             } else {
                                 this.total = parseFloat(res.data.cash) + this.DEBT_LOAN + this.INCOME + this.EXPENSE;
                                 this.sections[0].value = (this.DEBT_LOAN / this.total) * 100;
                                 this.sections[1].value = (this.EXPENSE / this.total) * 100;
                                 this.sections[2].value = (this.INCOME / this.total) * 100;
                                 this.sections[3].value = 100 - this.sections[0].value - this.sections[1].value - this.sections[2].value;
-                                console.log('duong')
                             }
                         }
                     )

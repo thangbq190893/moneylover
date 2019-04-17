@@ -27,7 +27,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::get('wallet/{id}','WalletController@edit');
     Route::patch('wallet/{id}','WalletController@update');
     Route::delete('wallet/{id}','WalletController@destroy');
-    Route::get('wallet/{id}/transactions','WalletController@show');
+    Route::get('wallet/{id}/transactions','WalletController@getTransaction');
     Route::post('transaction','TransactionController@store');
     Route::get('transaction/{id}','TransactionController@edit');
     Route::patch('transaction/{id}','TransactionController@update');
