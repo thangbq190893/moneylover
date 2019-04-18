@@ -3,10 +3,7 @@
         <div class="col-sm-3  mx-auto">
             <img :src="'/img/imgCustom/'+img" alt="" class="img-thumbnail">
             <router-link to="/uploadImg">
-                <div class=" imgProfile">
-                    <input type="file" @change="onFileSelected">
-                    <button @click="onUpload">Upload</button>
-                </div>
+                Edit profile picture
             </router-link>
         </div>
         <table class="table col-md-7 mx-auto">

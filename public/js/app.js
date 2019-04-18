@@ -56720,9 +56720,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "Profile",
@@ -56809,14 +56806,7 @@ var render = function() {
         }),
         _vm._v(" "),
         _c("router-link", { attrs: { to: "/uploadImg" } }, [
-          _c("div", { staticClass: " imgProfile" }, [
-            _c("input", {
-              attrs: { type: "file" },
-              on: { change: _vm.onFileSelected }
-            }),
-            _vm._v(" "),
-            _c("button", { on: { click: _vm.onUpload } }, [_vm._v("Upload")])
-          ])
+          _vm._v("\n            Edit profile picture\n        ")
         ])
       ],
       1
@@ -58232,21 +58222,17 @@ module.exports = function (css) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(120)
-}
 var normalizeComponent = __webpack_require__(2)
 /* script */
 var __vue_script__ = __webpack_require__(122)
 /* template */
-var __vue_template__ = __webpack_require__(123)
+var __vue_template__ = __webpack_require__(124)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
-var __vue_styles__ = injectStyle
+var __vue_styles__ = null
 /* scopeId */
-var __vue_scopeId__ = "data-v-910c8950"
+var __vue_scopeId__ = null
 /* moduleIdentifier (server only) */
 var __vue_module_identifier__ = null
 var Component = normalizeComponent(
@@ -58279,46 +58265,8 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 120 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(121);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(3)("81923096", content, false, {});
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-910c8950\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./UploadImageProfile.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-910c8950\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./UploadImageProfile.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 121 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(1)(false);
-// imports
-
-
-// module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
-
-// exports
-
-
-/***/ }),
+/* 120 */,
+/* 121 */,
 /* 122 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -58331,12 +58279,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    name: "UploadImageProfile",
     data: function data() {
         return {
-            selectedFile: null,
+            image: '',
             API: axios.create({
                 headers: {
                     'Authorization': 'Bearer ' + window.$cookies.get('token')
@@ -58347,40 +58312,78 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     methods: {
-        onFileSelected: function onFileSelected(event) {
-            this.selectedFile = event.target.files[0];
-            console.log(this.selectedFile);
+        onImageChange: function onImageChange(e) {
+            var files = e.target.files[0];
+            this.createImage(files.name);
+            console.log(this.createImage(files.name));
         },
-        onUpload: function onUpload() {
-            var params = {
-                'photo': this.selectedFile.name
+        createImage: function createImage(file) {
+            var reader = new FileReader();
+            var vm = this;
+            reader.onload = function (e) {
+                vm.image = e.target.result;
             };
-            this.API.patch('/api/uploadImg', params, {
-                onUploadProgress: function onUploadProgress(uploadEvent) {
-                    console.log('Upload progress: ' + Math.round(uploadEvent.loaded / uploadEvent.total * 100) + '%');
-                }
-            }).then(function (res) {
-                console.log(res.data);
+            reader.readAsDataURL(file);
+        },
+        uploadImage: function uploadImage() {
+            this.API.patch('/uploadImg', { image: this.image }).then(function (response) {
+                console.log(response.data);
             });
         }
     }
 });
 
 /***/ }),
-/* 123 */
+/* 123 */,
+/* 124 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: " imgProfile" }, [
-    _c("input", {
-      attrs: { type: "file" },
-      on: { change: _vm.onFileSelected }
-    }),
-    _vm._v(" "),
-    _c("button", { on: { click: _vm.onUpload } }, [_vm._v("Upload")])
+  return _c("div", { staticClass: "container" }, [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-md-8" }, [
+        _c("div", { staticClass: "card card-default" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _vm._v("File Upload Component")
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "row" }, [
+              _vm.image
+                ? _c("div", { staticClass: "col-md-3" }, [
+                    _c("img", {
+                      staticClass: "img-responsive",
+                      attrs: { src: _vm.image, height: "70", width: "90" }
+                    })
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-6" }, [
+                _c("input", {
+                  staticClass: "form-control",
+                  attrs: { type: "file" },
+                  on: { change: _vm.onImageChange }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-3" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-success btn-block",
+                    on: { click: _vm.uploadImage }
+                  },
+                  [_vm._v("Upload Image")]
+                )
+              ])
+            ])
+          ])
+        ])
+      ])
+    ])
   ])
 }
 var staticRenderFns = []

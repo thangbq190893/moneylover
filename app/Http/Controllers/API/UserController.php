@@ -67,10 +67,10 @@ class UserController extends Controller
 //   Upload img
     public function uploadImg(Request $request)
     {
-        if ($request->photo) {
-            $image = $request->photo;
-            $name = time() . '.' . explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
-            \Image::make($request->get('image'))->save(public_path('images/') . $name);
+        if ($request->get('photo')) {
+            $image = $request->get('image');
+            $name = time().'.' . explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
+            \Image::make($request->get('image'))->save(public_path('images/').$name);
         }
         $user = Auth::user();
         $user->photo =$name;
