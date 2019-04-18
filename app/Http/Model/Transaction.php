@@ -4,38 +4,59 @@ namespace App\Http\Model;
 
 use App\Helper\Item\ItemHelper;
 use Illuminate\Database\Eloquent\Model;
+
 class Transaction extends Model
 {
+    protected $appends = ['walletname', 'item', 'currency_name', 'category_id'];
+    protected $visible = ['id', 'category_id', 'wallet_id', 'cost', 'walletname', 'date', 'item', 'item_id', 'currency_name', 'event', 'note', 'with_people'];
+    protected $table = 'transactions';
+    protected $fillable = ['wallet_id', 'cost', 'date', 'item_id', 'event'];
 
-    protected $appends=['walletname','item','currency_name','category_id'];
-    protected $visible=['id','category_id','wallet_id','cost', 'walletname','date','item','item_id','currency_name','event','note','with_people'];
-    protected $table='transactions';
-    protected $fillable=['wallet_id','cost','date','item_id'];
+    public function traWallet()
+    {
+        return $this->belongsTo(Wallet::class, 'wallet_id');
+    }
 
-    public function wallet(){
-        return $this->belongsTo(Wallet::class,'wallet_id');
+    public function traItem()
+    {
+        return $this->belongsTo(Item::class, 'item_id');
     }
-    public function tr_item(){
-        return $this->belongsTo(Item::class,'item_id');
+
+    public function getItemAttribute()
+    {
+        return ItemHelper::getItemName($this->item_id);
     }
-    public function getitemAttribute(){
-        $item_id=$this->item_id;
-        $item=Item::where('id',$item_id)->first();
-        return $item->name;
-    }
-    public function getwalletnameAttribute(){
-        $wallet_id=$this->wallet_id;
-        $wallet_name=Wallet::where('id',$wallet_id)->first();
+
+    public function getWalletNameAttribute()
+    {
+        $wallet_name = Wallet::where('id', $this->wallet_id)->first();
         return $wallet_name->name;
     }
-    public function getCurrencyNameAttribute(){
-        $wallet_id=$this->wallet_id;
-        $currency_id=Wallet::find($wallet_id)->first()->getCurrencyNameAttribute();
-        return $currency_id;
-    }
-    public function getCategoryIdAttribute()
+
+    public function getCurrencyNameAttribute()
     {
-        return ItemHelper::get_categoryid($this->item_id);
+        $currency_id = Wallet::where('id', $this->wallet_id)->first()->curency_id;
+        $currency_name = Currency::where('id', $currency_id)->first()->name;
+        return $currency_name;
     }
 
+    public function getCategoryIdAttribute()
+    {
+        return ItemHelper::getCategoryId($this->item_id);
+    }
+
+    public static function searchTrans($value1, $value2)
+    {
+        $query = Transaction::where(function ($query) use ($value1) {
+            $query->where('wallet_id', '=', $value1);
+        })->where(function ($query) use ($value2) {
+            $query->where('event', 'like', '%' . $value2 . '%')
+                ->orwhere('note', 'like', '%' . $value2 . '%')
+                ->orwhere('with_people', 'like', '%' . $value2 . '%')
+                ->orwhere('cost', 'like', '%' . $value2 . '%')
+                ->orwhere('date', 'like', '%' . $value2 . '%')
+                ->orwhere('item_id', ItemHelper::getItemId($value2));
+        })->get();
+        return $query;
+    }
 }

@@ -61,15 +61,17 @@
                                 }
                             })
                                 .then((response) => {
-                                    const id = response.data.id;
-                                    const name = response.data.name;
-                                    const email = response.data.email;
-                                    const created_at = response.data.created_at;
+                                    let id = response.data.id;
+                                    let name = response.data.name;
+                                    let email = response.data.email;
+                                    let created_at = response.data.created_at;
+                                    let img = response.data.photo;
                                     EventBus.$emit('name', name);
                                     window.$cookies.set('id', id);
                                     window.$cookies.set('name', name);
                                     window.$cookies.set('email', email);
                                     window.$cookies.set('created_at', created_at);
+                                    window.$cookies.set('img', img);
                                     this.$router.push({name: 'chart'});
                                 });
                         }

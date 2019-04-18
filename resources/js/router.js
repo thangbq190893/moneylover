@@ -6,6 +6,7 @@ import ManagerWallet from './components/ManagerWallet/ManagerWallet.vue'
 import Transaction from './components/ManagerWallet/Transactions.vue'
 import DonutChart from './components/ActivityGrap/DonutChart.vue';
 import Profile from './components/user/Profile.vue';
+import ImgProfile from './components/user/UploadImageProfile.vue';
 
 Vue.use(Router);
 
@@ -42,6 +43,11 @@ const router = new Router({
             path: '/chart',
             name: 'chart',
             component: DonutChart,
+            meta: { requiresAuth: true }
+        },{
+            path: '/uploadImg',
+            name: 'uploadImg',
+            component: ImgProfile,
             meta: { requiresAuth: true }
         },
     ],

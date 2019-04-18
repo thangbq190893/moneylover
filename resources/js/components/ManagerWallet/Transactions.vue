@@ -63,7 +63,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr class="table-success" role="row" v-for="(trs,id) in orderbyTransactions ">
+                            <tr class="table-success" role="row" v-for="(trs,id) in orderbyTransactions" v-if="trs.id">
                                 <td rowspan="1" colspan="1">{{trs.item}}</td>
                                 <td rowspan="1" colspan="1">{{trs.cost | formatMoney}} {{trs.currency_name}}</td>
                                 <th rowspan="1" colspan="1">{{trs.event}}</th>
@@ -82,6 +82,9 @@
                             </tr>
                             </tbody>
                         </table>
+                        <p class="text-center" role="row" v-for="trs in orderbyTransactions" v-if="!trs.id">
+                            {{trs.event}}
+                        </p>
                         <button class="btn btn-success" @click="NewTransaction">
                             <i class="fas fa-plus-circle">Add New</i>
                         </button>
@@ -92,13 +95,13 @@
                     <div class="col-lg-auto">
                         <div class="dataTables_paginate paging_simple_numbers " id="example2_paginate">
                             <ul class="pagination">
-                                <li class="paginate_button page-item previous disabled" id="example2_previous">
+                                <li class="paginate_button page-item previous disabled">
                                     <button @click="prevPage">Previous</button>
                                 </li>
-                                <li class="paginate_button page-item active">
-                                    <a href="#" aria-controls="example2" data-dt-idx="1" tabindex="0" class="page-link">{{currentPage}}</a>
+                                <li class="paginate_button page-item current">
+                                    <button class="bg-blue border-primary">{{currentPage}}</button>
                                 </li>
-                                <li class="paginate_button page-item next" id="example2_next">
+                                <li class="paginate_button page-item next">
                                     <button @click="nextPage">Next</button>
                                 </li>
                             </ul>
@@ -126,25 +129,26 @@
                             <form action="./api/transaction" method="post" @submit.prevent="createTrans()"
                                   class="col-lg-6">
                                 <ul class="list-group item">
-                                    <p>category</p>
+                                    <p>Category</p>
                                     <select @change="getItem($event)">
-                                        <option value="0">Please select Category</option>
+                                        <option value="">Please select Category</option>
                                         <option v-for="cat in categories" :value="cat.id">{{cat.name}}</option>
                                     </select>
-                                    <p>item_id</p>
+                                    <p>Item</p>
                                     <select @change="getValueItem($event)">
+                                        <option value="">Please select Item</option>
                                         <option v-for="it in items" :value="it.id">{{it.name}}</option>
                                     </select>
                                     <p class="red"> {{errors.item_id}}</p>
-                                    <p>cost</p>
+                                    <p>Cost</p>
                                     <input class="item" v-model="cost" type="number">
                                     <p class="red">{{errors.cost}}</p>
-                                    <p>event</p>
+                                    <p>Event</p>
                                     <input class="item" v-model="event" type="text">
                                     <p class="red">{{errors.event}}</p>
-                                    <p>note</p>
+                                    <p>Note</p>
                                     <input class="item" v-model="note" type="text">
-                                    <p>with people </p>
+                                    <p>With people </p>
                                     <input class="item" v-model="with_people" type="text">
                                 </ul>
                                 <div class="modal-footer">
@@ -175,14 +179,14 @@
                             <form method="patch" @submit.prevent="editTrans()"
                                   class="col-lg-6">
                                 <ul class="list-group item">
-                                    <p>category</p>
+                                    <p>Category</p>
                                     <select @change="getItem($event)">
-                                        <option :value="category_id">Please choose Category</option>
+                                        <option :value="category_id">Please choose category</option>
                                         <option v-for="cat in categories" :value="cat.id">{{cat.name}}</option>
                                     </select>
                                     <p>Item</p>
                                     <select @change="getValueItem($event)">
-                                        <option :value="item_id">Please choose Item</option>
+                                        <option :value="item_id">{{item_name}}</option>
                                         <option v-for="it in items" :value="it.id">{{it.name}}</option>
                                     </select>
                                     <p>cost</p>
@@ -216,20 +220,21 @@
         data() {
             return {
                 errors: {
-                    item_id: "",
-                    cost: "",
-                    event: ""
+                    item_id: '',
+                    cost: '',
+                    event: '',
+                    search: ''
                 },
                 //add trans
-                trans_id: "",
-                event: "",
-                cost: "",
-                note: "",
-                with_people: "",
-                item_id: "",
-                item_name: "",
-                category_id: "",
-                category_name: "",
+                trans_id: '',
+                event: '',
+                cost: '',
+                note: '',
+                with_people: '',
+                item_id: '',
+                item_name: '',
+                category_id: '',
+                category_name: '',
                 items: [],
                 categories: [],
                 getValue: '',
@@ -241,7 +246,7 @@
                 currentSortDir: 'asc',
                 // valiable to paginate
                 n: 0,
-                pageSize: 3,
+                pageSize: 5,
                 currentPage: 1,
                 API: axios.create({
                     headers: {
@@ -253,7 +258,6 @@
         },
         mounted() {
             this.getListTransaction();
-            this.getListCategory();
         },
         computed: {
             orderbyTransactions: function () {
@@ -325,13 +329,17 @@
             },
             // add-transaction
             NewTransaction() {
-                this.cost = "";
-                this.event = "";
-                this.note = "";
-                this.with_people = "";
-                this.errors.event= "";
-                this.errors.item_id= "";
-                this.errors.cost = "";
+                this.categories = [];
+                this.items = [];
+                this.cost = '';
+                this.event = '';
+                this.note = '';
+                this.item_id = '';
+                this.with_people = '';
+                this.errors.event = '';
+                this.errors.item_id = '';
+                this.errors.cost = '';
+                this.getListCategory();
                 $('#AddTrans').modal('show')
             },
             getItem(event) {
@@ -344,8 +352,8 @@
                 this.item_id = event.target.value
             },
             createTrans() {
-                this.errors.event= "";
-                this.errors.item_id= "";
+                this.errors.event = "";
+                this.errors.item_id = "";
                 this.errors.cost = "";
                 var params = {
                     wallet_id: this.$route.params.id,
@@ -355,16 +363,16 @@
                     note: this.note,
                     with_people: this.with_people
                 };
-                if (!this.item_id){
+                if (!this.item_id) {
                     this.errors.item_id = "Item is required"
                 }
-                if (!this.cost){
+                if (!this.cost) {
                     this.errors.cost = "Cost is required"
                 }
-                if (!this.event){
+                if (!this.event) {
                     this.errors.event = "Event is required"
                 }
-                if (!(this.errors.item_id|| this.errors.cost || this.errors.event)){
+                if (!(this.errors.item_id || this.errors.cost || this.errors.event)) {
                     if (window.$cookies.get('token')) {
                         this.API.post('/api/transaction', params).then((response) => {
                             if (this.transact instanceof Array) {
@@ -381,13 +389,16 @@
             },
             // Update transaction
             editTransaction(trans_id, id) {
-                this.errors.cost= "";
-                this.errors.event= "";
+                this.categories = [];
+                this.getListCategory();
+                this.errors.cost = "";
+                this.errors.event = "";
                 this.n = id + (this.currentPage - 1) * this.pageSize;
                 this.trans_id = trans_id;
                 this.API.get('/api/transaction/' + trans_id)
                     .then((response) => {
                             this.category_id = response.data.category_id;
+                            this.item_name = response.data.item;
                             this.item_id = response.data.item_id;
                             this.cost = response.data.cost;
                             this.note = response.data.note;
@@ -398,8 +409,8 @@
                     )
             },
             editTrans() {
-                this.errors.cost= "";
-                this.errors.event= "";
+                this.errors.cost = "";
+                this.errors.event = "";
                 var params = {
                     wallet_id: this.$route.params.id,
                     item_id: this.item_id,
@@ -411,8 +422,8 @@
                 if (this.cost == "") {
                     this.errors.cost = "Cost is required"
                 }
-                if (this.event == ""){
-                    this.errors.event= "Event is required"
+                if (this.event == "") {
+                    this.errors.event = "Event is required"
                 }
                 if (!(this.errors.cost || this.errors.event)) {
                     if (window.$cookies.get('token')) {
@@ -434,7 +445,6 @@
                 this.API.delete('/api/transaction/' + trans_id)
                     .then((res) => {
                         this.transact.splice(this.n, 1);
-                        alert(res.data.Delete)
                     })
             }
         },

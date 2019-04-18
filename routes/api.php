@@ -33,6 +33,7 @@ Route::group(['middleware' => 'auth:api'], function () {
     Route::patch('transaction/{id}','TransactionController@update');
     Route::delete('transaction/{id}','TransactionController@destroy');
     Route::post('searchTransaction','TransactionController@search');
+    Route::patch('uploadImg','API\UserController@uploadImg');
     //Please do not remove this if you want adminlte:route and adminlte:link commands to works correctly.
     #adminlte_api_routes
 });

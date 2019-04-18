@@ -23,32 +23,33 @@
                                     STT &emsp;
                                     <button class="fa far fa-sort "></button>
                                 </th>
-                                <th  @click="sort('name')">
+                                <th @click="sort('name')">
                                     Name &emsp; &emsp; &emsp; &emsp;
                                     <button class="fa far fa-sort "></button>
                                 </th>
-                                <th  @click="sort('cash')">
+                                <th @click="sort('cash')">
                                     Cash &emsp; &emsp; &emsp; &emsp; &emsp;
                                     <button class="fa far fa-sort"></button>
                                 </th>
-                                <th  @click="sort('pay')">
+                                <th @click="sort('pay')">
                                     Current Money &emsp; &emsp;
                                     <button class="fa far fa-sort"></button>
                                 </th>
-                                <th >Modify</th>
-                                <th >List Transaction </th>
+                                <th>Modify</th>
+                                <th>List Transaction</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr role="row" v-for="(wl,id) in orderbyWallets ">
-                                <td >{{id}}</td>
-                                <td >{{wl.name}}</td>
-                                <td >{{ wl.cash  | formatMoney}} {{wl.currency_name}}</td>
-                                <td >{{wl.pay | formatMoney}} {{wl.currency_name}}</td>
+                                <td>{{id}}</td>
+                                <td>{{wl.name}}</td>
+                                <td>{{ wl.cash | formatMoney}} {{wl.currency_name}}</td>
+                                <td>{{wl.pay | formatMoney}} {{wl.currency_name}}</td>
                                 <td class="hover">
                                     <button @click="EditModal(wl.id,id)">
                                         <i class="fa fa-edit blue"></i>
-                                    </button> /
+                                    </button>
+                                    /
                                     <button @click="DeleteWallet(wl.id,id)">
                                         <i class="fa fa-trash red"></i>
                                     </button>
@@ -70,14 +71,14 @@
                     <div class="col-lg-auto">
                         <div class="dataTables_paginate paging_simple_numbers " id="example2_paginate">
                             <ul class="pagination">
-                                <li class="paginate_button page-item previous disabled" id="example2_previous">
-                                    <button @click="prevPage">Previous</button>
+                                <li class="paginate_button page-item previous disabled">
+                                    <button class="" @click="prevPage">Previous</button>
                                 </li>
-                                <li class="paginate_button page-item active">
-                                    <a href="#" aria-controls="example2" data-dt-idx="1" tabindex="0" class="page-link">{{currentPage}}</a>
+                                <li class="paginate_button page-item current ">
+                                    <button class="bg-blue border-primary">{{currentPage}}</button>
                                 </li>
-                                <li class="paginate_button page-item next" id="example2_next">
-                                    <button @click="nextPage">Next</button>
+                                <li class="paginate_button page-item next">
+                                    <button class="" @click="nextPage">Next</button>
                                 </li>
                             </ul>
                         </div>
@@ -104,14 +105,17 @@
                                 <ul class="list-group-item">
                                     <p>Tên Ví</p>
                                     <input class="item" name="name" v-model="name" type="text">
+                                    <p class="red">{{errors.name}}</p>
                                     <p>Total</p>
                                     <input class="item" v-model="cash" type="number">
+                                    <p class="red">{{errors.cash}}</p>
                                     <p>Currency</p>
                                     <select @change="getItem($event)">
-                                        <option selected="selected">Choose Currency</option>
-                                        <option v-for="curr in currency" :value="curr.id">{{ curr.name }}
+                                        <option value="">Choose Currency</option>
+                                        <option v-for="curr in currencies" :value="curr.id">{{ curr.name }}
                                         </option>
                                     </select>
+                                    <p class="red">{{errors.curency_id}}</p>
                                 </ul>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -159,17 +163,21 @@
 <script>
 
     export default {
-        components: {
-        },
+        components: {},
         data() {
             return {
+                errors: {
+                    name: '',
+                    cash: '',
+                    curency_id: ''
+                },
                 // for add
                 n: 0,
-                name: "",
-                cash: "",
-                currency_id: "",
-                currency_name: "",
-                currency: [],
+                name: '',
+                cash: '',
+                currency_id: '',
+                currency_name: '',
+                currencies: [],
                 //for show
                 getValue: '',
                 wallets: [],
@@ -177,7 +185,7 @@
                 currentSort: 'item',
                 currentSortDir: 'asc',
                 // valiable to paginate
-                pageSize: 3,
+                pageSize: 5,
                 currentPage: 1,
                 API: axios.create({
                     headers: {
@@ -189,7 +197,6 @@
         },
         mounted() {
             this.getListWallet();
-            this.getCurrency();
         },
         computed: {
             orderbyWallets: function () {
@@ -210,66 +217,61 @@
             },
         },
         methods: {
-            getItem(event){
+            getItem(event) {
                 this.currency_id = event.target.value;
             },
             // get currency
             getCurrency() {
                 this.API.get('/api/currency').then((response) => {
-                    this.currency = response.data
+                    this.currencies = response.data
                 })
             },
             // add wallet
-            addWallet() {
-                var params = {
-                    "name": this.name,
-                    "cash": this.cash,
-                    "curency_id": this.currency_id
-                };
-                this.API.post('/api/wallet', params)
-                    .then((response) => {
-                        const wl = response.data;
-                        this.wallets.push(wl);
-                    });
-                $('#addNew').modal('hide');
-            },
-            // Edit wallet
-            EditWallet() {
-                this.wallets.splice(this.n, 1);
-                var params = {
-                    "id": this.wallet_id,
-                    "name": this.name,
-                    "cash": this.cash,
-                };console.log(params);
-                this.API.patch('/api/wallet/' + this.wallet_id, params)
-                    .then((response) => {
-                        const wl = response.data;
-                        this.wallets.push(wl);
-                    });
-                $('#EditWallet').modal('hide');
-            },
-            DeleteWallet(id, ID) {
-                this.API.delete('/api/wallet/' + id);
-                this.wallets.splice(ID+(this.currentPage-1)*this.pageSize, 1);
-            },
-            ListTransaction(id) {
-                this.$router.push({name: 'transactions',params: {id}})
-            },
-            // get list transaction in wallet
-            getListWallet() {
-                this.API.get('/api/wallet')
-                    .then((response) => {
-                        this.wallets = response.data;
-                    })
-            },
             NewModal() {
-                this.name= "";
-                this.cash= "";
-                this.currency_id="";
+                this.currencies = [];
+                this.name = '';
+                this.cash = '';
+                this.currency_id = '';
+                this.errors.cash = '';
+                this.errors.name = '';
+                this.errors.curency_id = '';
+                this.getCurrency();
                 $('#addNew').modal('show');
             },
+            addWallet() {
+                this.currencies=[];
+                this.getCurrency();
+                this.errors.cash = '';
+                this.errors.name = '';
+                this.errors.curency_id = '';
+                var params = {
+                    'name': this.name,
+                    'cash': this.cash,
+                    'curency_id': this.currency_id
+                };
+                if (!this.name) {
+                    this.errors.name = 'wallet name is require'
+                }
+                if (!this.cash) {
+                    this.errors.cash = 'cash is require'
+                }
+                if (!this.currency_id) {
+                    this.errors.curency_id = 'please choose currency'
+                }
+                if (!(this.errors.curency_id || this.errors.cash || this.errors.name)) {
+                    this.API.post('/api/wallet', params)
+                        .then((response) => {
+                            const wl = response.data;
+                            this.wallets.push(wl);
+                        });
+                    $('#addNew').modal('hide');
+                }
+            },
+            // Edit wallet
             EditModal(id, ID) {
-                this.n = ID + (this.currentPage-1)*this.pageSize;
+                this.currencies = [];
+                this.getCurrency();
+                this.n = ID + (this.currentPage - 1) * this.pageSize;
                 this.wallet_id = id;
                 this.API.get('/api/wallet/' + id)
                     .then((response) => {
@@ -281,6 +283,36 @@
                 $('#EditWallet').modal('show');
 
             },
+            EditWallet() {
+                this.wallets.splice(this.n, 1);
+                var params = {
+                    'id': this.wallet_id,
+                    'name': this.name,
+                    'cash': this.cash,
+                    'curency_id': this.currency_id
+                };
+                this.API.patch('/api/wallet/' + this.wallet_id, params)
+                    .then((response) => {
+                        const wl = response.data;
+                        this.wallets.push(wl);
+                    });
+                $('#EditWallet').modal('hide');
+            },
+            DeleteWallet(id, ID) {
+                this.API.delete('/api/wallet/' + id);
+                this.wallets.splice(ID + (this.currentPage - 1) * this.pageSize, 1);
+            },
+            ListTransaction(id) {
+                this.$router.push({name: 'transactions', params: {id}})
+            },
+            // get list transaction in wallet
+            getListWallet() {
+                this.API.get('/api/wallet')
+                    .then((response) => {
+                        this.wallets = response.data;
+                    })
+            },
+
             // funtion to sort with asc or desc
             sort: function (s) {
                 //if s == current sort, reverse

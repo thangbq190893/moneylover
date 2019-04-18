@@ -14171,7 +14171,7 @@ a.text-muted:hover {
 }
 
 .bg-blue {
-  background-color: #3490dc;
+  background-color: #3490dc !important;
 }
 
 .bg-indigo {

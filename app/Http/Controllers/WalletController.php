@@ -33,7 +33,7 @@ class WalletController extends Controller
     public function getTransaction($id)
     {
         $transactions = Wallet::find($id)
-            ->wa_transactions()->get();
+            ->walTransactions()->get();
         return response()->json($transactions);
     }
 
@@ -41,7 +41,6 @@ class WalletController extends Controller
     {
         $wallet = Wallet::findOrFail($id);
         return response()->json($wallet);
-
     }
 
     public function update(WalletRequest $request, $id)
@@ -49,7 +48,7 @@ class WalletController extends Controller
         $user_id = Auth::user()->id;
         $wallet = Wallet::findOrFail($id);
 //            Create history change
-        $history= HistoryWallet::create([
+        HistoryWallet::create([
             'wallet_id' => $id,
             'old_name' => $wallet->name,
             'new_name' => $request->name,
@@ -62,7 +61,7 @@ class WalletController extends Controller
         $wallet->cash = $request->cash;
         $wallet->user_id = $user_id;
         $wallet->save();
-        return response()->json([$wallet , $history]);
+        return response()->json($wallet);
     }
 
     public function destroy($id)

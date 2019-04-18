@@ -1,17 +1,23 @@
 <template>
     <div class=" mt-5 row">
-        <div class="jumbotron col-sm-3 mx-auto">
-            <h1 class="text-center"> Profile</h1>
+        <div class="col-sm-3  mx-auto">
+            <img :src="'/img/imgCustom/'+img" alt="" class="img-thumbnail">
+            <router-link to="/uploadImg">
+                <div class=" imgProfile">
+                    <input type="file" @change="onFileSelected">
+                    <button @click="onUpload">Upload</button>
+                </div>
+            </router-link>
         </div>
-        <table class="table col-md-6 mx-auto">
+        <table class="table col-md-7 mx-auto">
             <tbody>
             <tr>
-                <td class="font-weight-bold">Full Name</td>
-                <td>{{name}}</td>
+                <th class="">Full Name</th>
+                <td class="font-italic blue">{{name}}</td>
             </tr>
             <tr>
-                <td class="font-weight-bold">Email</td>
-                <td>{{email}}</td>
+                <th class="">Email</th>
+                <td class="font-italic blue">{{email}}</td>
             </tr>
             </tbody>
         </table>
@@ -46,6 +52,7 @@
                 token: window.$cookies.get('token'),
                 name: window.$cookies.get('name'),
                 email: window.$cookies.get('email'),
+                img: window.$cookies.get('img'),
                 wallets: [],
                 API: axios.create({
                     headers: {
@@ -96,5 +103,8 @@
 </script>
 
 <style scoped>
-
+.imgcustom {
+    width: 200px;
+    height: 150px;
+}
 </style>

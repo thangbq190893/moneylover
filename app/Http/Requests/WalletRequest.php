@@ -12,6 +12,7 @@ class WalletRequest extends FormRequest
     {
         throw new HttpResponseException(response()->json($validator->errors(), 422));
     }
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -30,11 +31,12 @@ class WalletRequest extends FormRequest
     public function rules()
     {
         return [
-            'name'=>'required',
-            'cash'=>'required',
-            'curency_id'=>'required'
+            'name' => 'required',
+            'cash' => 'required',
+            'curency_id' => 'required'
         ];
     }
+
     public function messages()
     {
         return [
@@ -42,4 +44,5 @@ class WalletRequest extends FormRequest
             'name.required' => 'Name is not null'
         ];
     }
+
 }

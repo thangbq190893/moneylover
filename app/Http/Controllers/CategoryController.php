@@ -7,26 +7,16 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
-        $category= Category::all();
-        return response()-> json($category);
+        $category = Category::all();
+        return response()->json($category);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Category  $category
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
-        $item= Category::find($id)->items;
+        $item = Category::find($id)->catItems;
         return response()->json($item);
     }
 
