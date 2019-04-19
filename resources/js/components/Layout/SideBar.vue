@@ -19,7 +19,7 @@
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img src="/img/imgCustom/profile.png" class="img-circle elevation-2" alt="User Image">
+                        <img :src="'/image/'+ img" type="image" class="img-circle elevation-2" alt="User Image">
                     </div>
                     <div class="info">
                         <p class="d-block white">
@@ -94,13 +94,29 @@
     export default {
         data() {
             return {
-                name: window.$cookies.get('name'),
                 token: window.$cookies.get('token'),
-                email: "",
-                id: ""
+                email: '',
+                name: '',
+                id: '',
+                img: '',
+                API: axios.create({
+                    headers: {
+                        'Authorization': 'Bearer ' + window.$cookies.get('token')
+                    },
+                    timeout: 999999
+                })
             }
         },
         mounted() {
+            if (window.$cookies.get('token')){
+                this.API.get('/api/profile').then((res)=> {
+                    this.name = res.data.name;
+                    this.img = res.data.photo;
+                });
+            }
+            EventBus.$on('img',(img)=>{
+               this.img = img;
+            });
             EventBus.$on('name', (name) => {
                 this.name = name;
             });

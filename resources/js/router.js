@@ -6,13 +6,12 @@ import ManagerWallet from './components/ManagerWallet/ManagerWallet.vue'
 import Transaction from './components/ManagerWallet/Transactions.vue'
 import DonutChart from './components/ActivityGrap/DonutChart.vue';
 import Profile from './components/user/Profile.vue';
-import ImgProfile from './components/user/UploadImageProfile.vue';
 
 Vue.use(Router);
 
 const router = new Router({
     mode: 'history',
-    routes:[
+    routes: [
         {
             path: '/login',
             name: 'login',
@@ -27,29 +26,24 @@ const router = new Router({
             path: '/profile',
             name: 'profile',
             component: Profile,
-            meta: { requiresAuth: true }
+            meta: {requiresAuth: true}
         }
         , {
             path: '/manager-wallet',
             name: 'manager-wallet',
             component: ManagerWallet,
-            meta: { requiresAuth: true }
-        },{
+            meta: {requiresAuth: true}
+        }, {
             path: '/wallet/:id',
             name: 'transactions',
             component: Transaction,
-            meta: { requiresAuth: true }
-        },{
+            meta: {requiresAuth: true}
+        }, {
             path: '/chart',
             name: 'chart',
             component: DonutChart,
-            meta: { requiresAuth: true }
-        },{
-            path: '/uploadImg',
-            name: 'uploadImg',
-            component: ImgProfile,
-            meta: { requiresAuth: true }
-        },
+            meta: {requiresAuth: true}
+        }
     ],
 });
 router.beforeEach((to, from, next) => {
@@ -57,7 +51,7 @@ router.beforeEach((to, from, next) => {
         const token = window.$cookies.get('token');
         if (token) {
             next()
-        }else{
+        } else {
             next({name: 'login'})
         }
     }

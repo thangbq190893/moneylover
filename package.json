@@ -24,6 +24,7 @@
         "admin-lte": "^3.0.0-alpha.2",
         "apexcharts": "^3.6.7",
         "chart.js": "^2.8.0",
+        "vee-validate": "^2.2.3",
         "vue": "^2.5.7",
         "vue-axios": "^2.1.4",
         "vue-chartjs": "^3.4.2",

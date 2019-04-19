@@ -16,31 +16,31 @@ use Illuminate\Http\Request;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
-Route::post('login','API\UserController@login');
-Route::post('register','API\UserController@register');
+Route::post('login', 'API\UserController@login');
+Route::post('register', 'API\UserController@register');
 
 
 Route::group(['middleware' => 'auth:api'], function () {
-    Route::get('profile','API\UserController@details');
-    Route::get('wallet','WalletController@index');
-    Route::post('wallet','WalletController@store');
-    Route::get('wallet/{id}','WalletController@edit');
-    Route::patch('wallet/{id}','WalletController@update');
-    Route::delete('wallet/{id}','WalletController@destroy');
-    Route::get('wallet/{id}/transactions','WalletController@getTransaction');
-    Route::post('transaction','TransactionController@store');
-    Route::get('transaction/{id}','TransactionController@edit');
-    Route::patch('transaction/{id}','TransactionController@update');
-    Route::delete('transaction/{id}','TransactionController@destroy');
-    Route::post('searchTransaction','TransactionController@search');
-    Route::patch('uploadImg','API\UserController@uploadImg');
+    Route::get('profile', 'API\UserController@details');
+    Route::get('wallet', 'WalletController@index');
+    Route::post('wallet', 'WalletController@store');
+    Route::get('wallet/{id}', 'WalletController@edit');
+    Route::patch('wallet/{id}', 'WalletController@update');
+    Route::delete('wallet/{id}', 'WalletController@destroy');
+    Route::get('wallet/{id}/transactions', 'WalletController@getTransaction');
+    Route::post('transaction', 'TransactionController@store');
+    Route::get('transaction/{id}', 'TransactionController@edit');
+    Route::patch('transaction/{id}', 'TransactionController@update');
+    Route::delete('transaction/{id}', 'TransactionController@destroy');
+    Route::post('searchTransaction', 'TransactionController@search');
+    Route::post('uploadImg', 'API\UserController@uploadImg');
     //Please do not remove this if you want adminlte:route and adminlte:link commands to works correctly.
     #adminlte_api_routes
 });
-Route::resource('item','ItemController');
-Route::get('category','CategoryController@index');
-Route::get('category/{id}','CategoryController@show');
-Route::get('currency','CurrencyController@index');
+Route::resource('item', 'ItemController');
+Route::get('category', 'CategoryController@index');
+Route::get('category/{id}', 'CategoryController@show');
+Route::get('currency', 'CurrencyController@index');
 
 
 

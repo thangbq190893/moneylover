@@ -19,9 +19,10 @@
             </form>
         </div>
         <br>
-        <div >
+        <div>
             <h3 class="row justify-content-center">
-                Don't have an Account? please register &nbsp; &nbsp;  <router-link class="btn-success" tag="button" v-bind:to="{name: 'register'}">Register</router-link>
+                Don't have an Account? please register &nbsp; &nbsp;
+                <router-link class="btn-success" tag="button" v-bind:to="{name: 'register'}">Register</router-link>
             </h3>
         </div>
     </div>
@@ -51,7 +52,7 @@
                             alert("user name or password is incorrect");
                             this.$router.push({name: 'login'})
                         } else {
-                            window.$cookies.set('token',token);
+                            window.$cookies.set('token', token);
                             EventBus.$emit('token', token);
                             this.email = '';
                             this.password = '';
@@ -61,17 +62,10 @@
                                 }
                             })
                                 .then((response) => {
-                                    let id = response.data.id;
                                     let name = response.data.name;
-                                    let email = response.data.email;
-                                    let created_at = response.data.created_at;
                                     let img = response.data.photo;
                                     EventBus.$emit('name', name);
-                                    window.$cookies.set('id', id);
-                                    window.$cookies.set('name', name);
-                                    window.$cookies.set('email', email);
-                                    window.$cookies.set('created_at', created_at);
-                                    window.$cookies.set('img', img);
+                                    EventBus.$emit('img', img);
                                     this.$router.push({name: 'chart'});
                                 });
                         }

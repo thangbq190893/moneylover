@@ -144,8 +144,10 @@
                                 <ul class="list-group-item">
                                     <p>Tên Ví</p>
                                     <input class="item" name="name" v-model="name" type="text">
+                                    <p class="red">{{errors.name}}</p>
                                     <p>Total</p>
                                     <input class="item" v-model="cash" type="number">{{currency_name}}
+                                    <p class="red">{{errors.cash}}</p>
                                 </ul>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -187,6 +189,7 @@
                 // valiable to paginate
                 pageSize: 5,
                 currentPage: 1,
+                totalPage: 1,
                 API: axios.create({
                     headers: {
                         'Authorization': 'Bearer ' + window.$cookies.get('token')
@@ -239,68 +242,105 @@
                 $('#addNew').modal('show');
             },
             addWallet() {
-                this.currencies=[];
-                this.getCurrency();
-                this.errors.cash = '';
-                this.errors.name = '';
-                this.errors.curency_id = '';
-                var params = {
-                    'name': this.name,
-                    'cash': this.cash,
-                    'curency_id': this.currency_id
-                };
-                if (!this.name) {
-                    this.errors.name = 'wallet name is require'
-                }
-                if (!this.cash) {
-                    this.errors.cash = 'cash is require'
-                }
-                if (!this.currency_id) {
-                    this.errors.curency_id = 'please choose currency'
-                }
-                if (!(this.errors.curency_id || this.errors.cash || this.errors.name)) {
-                    this.API.post('/api/wallet', params)
-                        .then((response) => {
-                            const wl = response.data;
-                            this.wallets.push(wl);
-                        });
+                if (window.$cookies.get('token')) {
+                    this.currencies = [];
+                    this.getCurrency();
+                    this.errors.cash = '';
+                    this.errors.name = '';
+                    this.errors.curency_id = '';
+                    var params = {
+                        'name': this.name,
+                        'cash': this.cash,
+                        'curency_id': this.currency_id
+                    };
+                    if (!this.name) {
+                        this.errors.name = 'wallet name is require'
+                    }
+                    if (!this.cash) {
+                        this.errors.cash = 'cash is require'
+                    }
+                    if (!this.currency_id) {
+                        this.errors.curency_id = 'please choose currency'
+                    }
+                    if (!(this.errors.curency_id || this.errors.cash || this.errors.name)) {
+
+                        this.API.post('/api/wallet', params)
+                            .then((response) => {
+                                const wl = response.data;
+                                this.wallets.push(wl);
+                            });
+                        $('#addNew').modal('hide');
+                    }
+                } else {
+                    alert('phien lam viec het han');
                     $('#addNew').modal('hide');
+                    this.$router.push('/login');
                 }
             },
             // Edit wallet
             EditModal(id, ID) {
-                this.currencies = [];
-                this.getCurrency();
-                this.n = ID + (this.currentPage - 1) * this.pageSize;
-                this.wallet_id = id;
-                this.API.get('/api/wallet/' + id)
-                    .then((response) => {
-                        this.name = response.data.name;
-                        this.cash = response.data.cash;
-                        this.currency_id = response.data.curency_id;
-                        this.currency_name = response.data.currency_name;
-                    });
-                $('#EditWallet').modal('show');
+                if (window.$cookies.get('token')) {
+                    this.currencies = [];
+                    this.getCurrency();
+                    this.errors.cash = '';
+                    this.errors.name = '';
+                    this.n = ID + (this.currentPage - 1) * this.pageSize;
+                    this.wallet_id = id;
+                    this.API.get('/api/wallet/' + id)
+                        .then((response) => {
+                            this.name = response.data.name;
+                            this.cash = response.data.cash;
+                            this.currency_id = response.data.curency_id;
+                            this.currency_name = response.data.currency_name;
+                        });
+                    $('#EditWallet').modal('show');
 
+                } else {
+                    alert('Phien lam viec qua han');
+                    this.$router.push('/login');
+                }
             },
             EditWallet() {
-                this.wallets.splice(this.n, 1);
-                var params = {
-                    'id': this.wallet_id,
-                    'name': this.name,
-                    'cash': this.cash,
-                    'curency_id': this.currency_id
-                };
-                this.API.patch('/api/wallet/' + this.wallet_id, params)
-                    .then((response) => {
-                        const wl = response.data;
-                        this.wallets.push(wl);
-                    });
-                $('#EditWallet').modal('hide');
+                if (window.$cookies.get('token')) {
+                    this.errors.name = '';
+                    this.errors.cash = '';
+                    var params = {
+                        'id': this.wallet_id,
+                        'name': this.name,
+                        'cash': this.cash,
+                        'curency_id': this.currency_id
+                    };
+                    if (!this.name){
+                        this.errors.name = 'name is require'
+                    }
+                    if (!this.cash){
+                        this.errors.cash = 'cash is require'
+                    }
+                    if (!(this.errors.name || this.errors.cash)){
+                        this.API.patch('/api/wallet/' + this.wallet_id, params)
+                            .then((response) => {
+                                const wl = response.data;
+                                this.wallets.splice(this.n, 1);
+                                this.wallets.push(wl);
+                            });
+                        $('#EditWallet').modal('hide');
+                    }
+                } else {
+                    alert(' Phien lam viec qua han');
+                    $('#EditWallet').modal('hide');
+                    this.$router.push('/login');
+                }
+
             },
             DeleteWallet(id, ID) {
-                this.API.delete('/api/wallet/' + id);
-                this.wallets.splice(ID + (this.currentPage - 1) * this.pageSize, 1);
+                if (window.$cookies.get('token')) {
+                    this.API.delete('/api/wallet/' + id);
+                    this.wallets.splice(ID + (this.currentPage - 1) * this.pageSize, 1);
+                } else {
+                    alert(' Phien lam viec qua han ');
+                    this.$router.push('/login')
+                }
+
             },
             ListTransaction(id) {
                 this.$router.push({name: 'transactions', params: {id}})

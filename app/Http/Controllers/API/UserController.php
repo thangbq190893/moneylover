@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
-use http\Env\Response;
+use App\Http\Requests\ImageRequest;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -65,16 +65,13 @@ class UserController extends Controller
     }
 
 //   Upload img
-    public function uploadImg(Request $request)
+    public function uploadImg(ImageRequest $request)
     {
-        if ($request->get('photo')) {
-            $image = $request->get('image');
-            $name = time().'.' . explode('/', explode(':', substr($image, 0, strpos($image, ';')))[1])[1];
-            \Image::make($request->get('image'))->save(public_path('images/').$name);
-        }
         $user = Auth::user();
-        $user->photo =$name;
+        $imageName = time() . '.' . $request->image->getClientOriginalExtension();
+        $request->image->move(public_path('image'), $imageName);
+        $user->photo = $imageName;
         $user->save();
-        return $user;
+        return response()->json(['success' => 'You have successfully upload image.', 'image' => $imageName]);
     }
 }

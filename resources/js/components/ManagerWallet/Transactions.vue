@@ -89,6 +89,7 @@
                             <i class="fas fa-plus-circle">Add New</i>
                         </button>
                     </div>
+
                 </div>
                 <!--pagination-->
                 <div class="row justify-content-center">
@@ -248,6 +249,7 @@
                 n: 0,
                 pageSize: 5,
                 currentPage: 1,
+                totalPage: 1,
                 API: axios.create({
                     headers: {
                         'Authorization': 'Bearer ' + window.$cookies.get('token')
@@ -340,7 +342,12 @@
                 this.errors.item_id = '';
                 this.errors.cost = '';
                 this.getListCategory();
-                $('#AddTrans').modal('show')
+                if (window.$cookies.get('token')) {
+                    $('#AddTrans').modal('show')
+                } else {
+                    alert("phien lam viec qua han");
+                    this.$router.push('/login');
+                }
             },
             getItem(event) {
                 this.item_id = event.target.value;
@@ -383,30 +390,37 @@
                         });
                         $('#AddTrans').modal('hide');
                     } else {
-                        alert("phien lam viec qua han")
+                        alert("phien lam viec qua han");
+                        $('#AddTrans').modal('hide');
+                        this.$router.push('/login');
                     }
                 }
             },
             // Update transaction
             editTransaction(trans_id, id) {
-                this.categories = [];
-                this.getListCategory();
-                this.errors.cost = "";
-                this.errors.event = "";
-                this.n = id + (this.currentPage - 1) * this.pageSize;
-                this.trans_id = trans_id;
-                this.API.get('/api/transaction/' + trans_id)
-                    .then((response) => {
-                            this.category_id = response.data.category_id;
-                            this.item_name = response.data.item;
-                            this.item_id = response.data.item_id;
-                            this.cost = response.data.cost;
-                            this.note = response.data.note;
-                            this.event = response.data.event;
-                            this.with_people = response.data.with_people;
-                            $('#EditTrans').modal('show');
-                        }
-                    )
+                if (window.$cookies.get('token')) {
+                    this.categories = [];
+                    this.getListCategory();
+                    this.errors.cost = "";
+                    this.errors.event = "";
+                    this.n = id + (this.currentPage - 1) * this.pageSize;
+                    this.trans_id = trans_id;
+                    this.API.get('/api/transaction/' + trans_id)
+                        .then((response) => {
+                                this.category_id = response.data.category_id;
+                                this.item_name = response.data.item;
+                                this.item_id = response.data.item_id;
+                                this.cost = response.data.cost;
+                                this.note = response.data.note;
+                                this.event = response.data.event;
+                                this.with_people = response.data.with_people;
+                                $('#EditTrans').modal('show');
+                            }
+                        )
+                } else {
+                    alert("phien lam viec qua han")
+                    this.$router.push('/login')
+                }
             },
             editTrans() {
                 this.errors.cost = "";
@@ -434,18 +448,26 @@
                         });
                         $('#EditTrans').modal('hide');
                     } else {
-                        alert("phien lam viec qua han")
-                        this.$router.push('/login')
+                        alert("phien lam viec qua han");
+                        $('#EditTrans').modal('hide');
+                        this.$router.push('/login');
                     }
                 }
             },
             // Delete transaction
             deleteTransaction(trans_id, id) {
-                this.n = id + (this.currentPage - 1) * this.pageSize;
-                this.API.delete('/api/transaction/' + trans_id)
-                    .then((res) => {
-                        this.transact.splice(this.n, 1);
-                    })
+                if (window.$cookies.get('token')) {
+                    this.n = id + (this.currentPage - 1) * this.pageSize;
+                    this.API.delete('/api/transaction/' + trans_id)
+                        .then((res) => {
+                                this.transact.splice(this.n, 1);
+                            }
+                        )
+                } else {
+                    alert("phien lam viec qua han");
+                    this.$router.push('/login');
+                }
+
             }
         },
         watch: {

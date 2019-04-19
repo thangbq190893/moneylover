@@ -17,7 +17,8 @@ import 'vue-css-donut-chart/dist/vcdonut.css';
 
 Vue.use(Donut);
 Vue.use(VueCookies);
-VueCookies.config(3000);
+VueCookies.config(300);
+// Vue.use(VeeValidate);
 Vue.filter('formatMoney', function (value) {
     let val = (value/1).toFixed(2).replace('.', ',');
     return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.')
