@@ -100,7 +100,7 @@
                                     <button @click="prevPage">Previous</button>
                                 </li>
                                 <li class="paginate_button page-item current">
-                                    <button class="bg-blue border-primary">{{currentPage}}</button>
+                                    <button class="bg-blue border-primary">{{currentPage}} of {{totalPage}}</button>
                                 </li>
                                 <li class="paginate_button page-item next">
                                     <button @click="nextPage">Next</button>
@@ -247,7 +247,7 @@
                 currentSortDir: 'asc',
                 // valiable to paginate
                 n: 0,
-                pageSize: 5,
+                pageSize: 4,
                 currentPage: 1,
                 totalPage: 1,
                 API: axios.create({
@@ -258,13 +258,19 @@
                 })
             };
         },
+
         mounted() {
             this.getListTransaction();
         },
+
         computed: {
             orderbyTransactions: function () {
                 if (this.transact instanceof Array) {
                     return this.transact.sort((a, b) => {
+                        this.totalPage = Math.ceil(this.transact.length/this.pageSize);
+                        if (this.currentPage > this.totalPage){
+                            this.currentPage = this.totalPage;
+                        }
                         let modifier = 1;
                         if (this.currentSortDir === 'desc') modifier = -1;
                         if (a[this.currentSort] < b[this.currentSort]) {
@@ -284,6 +290,7 @@
                 }
             }
         },
+
         methods: {
             // get list category
             getListCategory() {
@@ -291,6 +298,7 @@
                     this.categories = response.data
                 })
             },
+
             // get list transaction in wallet
             getListTransaction(url = this.http) {
                 this.API.get(url)
@@ -298,9 +306,10 @@
                         this.transact = response.data;
                     })
             },
+
             // search transaction in wallet
             search() {
-                var params = {
+                let params = {
                     'search': this.getValue,
                     'walletId': this.$route.params.id
                 };
@@ -310,6 +319,7 @@
                         this.currentPage = 1;
                     })
             },
+
             // funtion to sort with asc or desc
             sort: function (s) {
                 //if s == current sort, reverse
@@ -318,17 +328,20 @@
                 }
                 this.currentSort = s;
             },
+
             // paginate
             nextPage() {
                 if ((this.currentPage * this.pageSize) < this.transact.length) {
                     this.currentPage++;
                 }
             },
+
             prevPage() {
                 if ((this.currentPage > 1)) {
                     this.currentPage--;
                 }
             },
+
             // add-transaction
             NewTransaction() {
                 this.categories = [];
@@ -349,20 +362,23 @@
                     this.$router.push('/login');
                 }
             },
+
             getItem(event) {
                 this.item_id = event.target.value;
                 this.API.get('/api/category/' + event.target.value).then((response) => {
                     this.items = response.data
                 });
             },
+
             getValueItem(event) {
                 this.item_id = event.target.value
             },
+
             createTrans() {
                 this.errors.event = "";
                 this.errors.item_id = "";
                 this.errors.cost = "";
-                var params = {
+                let params = {
                     wallet_id: this.$route.params.id,
                     item_id: this.item_id,
                     event: this.event,
@@ -384,8 +400,6 @@
                         this.API.post('/api/transaction', params).then((response) => {
                             if (this.transact instanceof Array) {
                                 this.transact.push(response.data);
-                            } else {
-                                this.transact.push(response.data);
                             }
                         });
                         $('#AddTrans').modal('hide');
@@ -396,6 +410,7 @@
                     }
                 }
             },
+
             // Update transaction
             editTransaction(trans_id, id) {
                 if (window.$cookies.get('token')) {
@@ -422,10 +437,11 @@
                     this.$router.push('/login')
                 }
             },
+
             editTrans() {
                 this.errors.cost = "";
                 this.errors.event = "";
-                var params = {
+                let params = {
                     wallet_id: this.$route.params.id,
                     item_id: this.item_id,
                     event: this.event,
@@ -454,6 +470,7 @@
                     }
                 }
             },
+
             // Delete transaction
             deleteTransaction(trans_id, id) {
                 if (window.$cookies.get('token')) {
@@ -470,6 +487,7 @@
 
             }
         },
+
         watch: {
             '$route'(to, from) {
                 this.wallet.ID = to.params.id;

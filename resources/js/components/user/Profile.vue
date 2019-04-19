@@ -3,7 +3,7 @@
         <div class="col-sm-3  mx-auto">
             <img :src="'/image/'+img" alt="" class=" imgcustom">
             <button class="btn-primary" @click="editPhoto">
-                <i class="fas fa-plus-circle">edit photo</i>
+                <i class="fas fa-plus-circle">&nbsp; Edit photo</i>
             </button>
         </div>
         <table class="table col-md-7 mx-auto">
@@ -39,7 +39,7 @@
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <h5 class="modal-title text-center blue">Edit Photo</h5>
+                    <h5 class="modal-title text-center blue"> Edit Photo</h5>
                     <div class="card-body">
                         <form @submit="formSubmit" enctype="multipart/form-data">
                             <strong>Image:</strong>
@@ -95,12 +95,14 @@
                 })
             }
         },
+
         mounted() {
             if (window.$cookies.get('token')) {
                 this.getWallet();
             }
             this.getProfile();
         },
+
         methods: {
             getProfile() {
                 this.API.get('/api/profile').then((res) => {
@@ -109,6 +111,7 @@
                     this.img = res.data.photo;
                 })
             },
+
             getWallet() {
                 this.API.get('/api/wallet').then((response) => {
                     let wls = response.data;
@@ -141,24 +144,26 @@
 
                 })
             },
+
             editPhoto() {
                 document.getElementById('myInput').value = '';
                 this.errors.img = '';
                 this.image = '';
                 $('#editPhoto').modal('show');
             },
+
             onImageChange(e) {
                 this.image = e.target.files[0];
-                console.log(this.image)
             },
+
             formSubmit(e) {
                 e.preventDefault();
                 this.errors.img = '';
                 let formData = new FormData();
                 formData.append('image', this.image);
                 if (!this.image) {
-                    this.errors.img = 'image not found 1';
-                }else if (this.image.type == 'image/png' || this.image.type == 'image/jpeg' || this.image.type == 'image/jpg') {
+                    this.errors.img = 'image not found';
+                } else if (this.image.type == 'image/png' || this.image.type == 'image/jpeg' || this.image.type == 'image/jpg') {
                     this.API.post('/api/uploadImg', formData)
                         .then((response) => {
 
@@ -172,7 +177,7 @@
 
                     $('#editPhoto').modal('hide');
                 } else {
-                    this.errors.img = 'image not found';
+                    this.errors.img = 'not image';
                 }
             }
         }

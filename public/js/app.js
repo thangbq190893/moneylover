@@ -14450,7 +14450,7 @@ window.Vue = __webpack_require__(7);
 
 Vue.use(__WEBPACK_IMPORTED_MODULE_4_vue_css_donut_chart___default.a);
 Vue.use(__WEBPACK_IMPORTED_MODULE_3_vue_cookies___default.a);
-__WEBPACK_IMPORTED_MODULE_3_vue_cookies___default.a.config(300);
+__WEBPACK_IMPORTED_MODULE_3_vue_cookies___default.a.config(30000);
 // Vue.use(VeeValidate);
 Vue.filter('formatMoney', function (value) {
     var val = (value / 1).toFixed(2).replace('.', ',');
@@ -49716,7 +49716,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n#aside1[data-v-c3c2de3c] {\n    /*background-image: url(\"/img/imgCustom/sidebar.jpg\");*/\n}\n", ""]);
+exports.push([module.i, "\n.img[data-v-c3c2de3c]{\n    width: 40px;\n    height: 40px;\n}\n", ""]);
 
 // exports
 
@@ -49911,16 +49911,7 @@ var render = function() {
             _vm._v(" "),
             _c("div", { staticClass: "sidebar" }, [
               _c("div", { staticClass: "user-panel mt-3 pb-3 mb-3 d-flex" }, [
-                _c("div", { staticClass: "image" }, [
-                  _c("img", {
-                    staticClass: "img-circle elevation-2",
-                    attrs: {
-                      src: "/image/" + _vm.img,
-                      type: "image",
-                      alt: "User Image"
-                    }
-                  })
-                ]),
+                _c("div", { staticClass: "image" }),
                 _vm._v(" "),
                 _c("div", { staticClass: "info" }, [
                   _c("p", { staticClass: "d-block white" }, [
@@ -50015,27 +50006,7 @@ var render = function() {
                             1
                           ),
                           _vm._v(" "),
-                          _c(
-                            "li",
-                            { staticClass: "nav-item" },
-                            [
-                              _c(
-                                "router-link",
-                                {
-                                  staticClass: "nav-link active",
-                                  attrs: { tag: "a", to: "/chart1" }
-                                },
-                                [
-                                  _c("i", {
-                                    staticClass: "fa fa-circle-o nav-icon"
-                                  }),
-                                  _vm._v(" "),
-                                  _c("p", [_vm._v("Inactive Page")])
-                                ]
-                              )
-                            ],
-                            1
-                          )
+                          _vm._m(0)
                         ])
                       ],
                       1
@@ -50103,7 +50074,20 @@ var render = function() {
       : _vm._e()
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("li", { staticClass: "nav-item" }, [
+      _c("a", { staticClass: "nav-link active", attrs: { href: "#" } }, [
+        _c("i", { staticClass: "fa fa-circle-o nav-icon" }),
+        _vm._v(" "),
+        _c("p", [_vm._v("Inactive Page")])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -53849,7 +53833,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -54049,7 +54033,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             currentSort: 'item',
             currentSortDir: 'asc',
             // valiable to paginate
-            pageSize: 5,
+            pageSize: 3,
             currentPage: 1,
             totalPage: 1,
             API: axios.create({
@@ -54064,17 +54048,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.getListWallet();
     },
 
+
     computed: {
         orderbyWallets: function orderbyWallets() {
             var _this = this;
 
             return this.wallets.sort(function (a, b) {
+                _this.totalPage = Math.ceil(_this.wallets.length / _this.pageSize);
+                if (_this.currentPage > _this.totalPage) {
+                    _this.currentPage = _this.totalPage;
+                }
                 var modifier = 1;
                 if (_this.currentSortDir === 'desc') modifier = -1;
                 if (a[_this.currentSort] < b[_this.currentSort]) return -1 * modifier;
                 if (a[_this.currentSort] > b[_this.currentSort]) return 1 * modifier;
                 return 0;
             })
+
             // paginate for data
             .filter(function (row, index) {
                 var start = (_this.currentPage - 1) * _this.pageSize;
@@ -54083,10 +54073,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         }
     },
+
     methods: {
         getItem: function getItem(event) {
             this.currency_id = event.target.value;
         },
+
 
         // get currency
         getCurrency: function getCurrency() {
@@ -54096,6 +54088,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this2.currencies = response.data;
             });
         },
+
 
         // add wallet
         NewModal: function NewModal() {
@@ -54146,6 +54139,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.$router.push('/login');
             }
         },
+
 
         // Edit wallet
         EditModal: function EditModal(id, ID) {
@@ -54215,6 +54209,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.$router.push({ name: 'transactions', params: { id: id } });
         },
 
+
         // get list transaction in wallet
         getListWallet: function getListWallet() {
             var _this6 = this;
@@ -54233,6 +54228,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
             this.currentSort = s;
         },
+
         // paginate
         nextPage: function nextPage() {
             if (this.currentPage * this.pageSize < this.wallets.length) {
@@ -54244,9 +54240,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.currentPage--;
             }
         }
-    },
-
-    watch: {}
+    }
 });
 
 /***/ }),
@@ -54467,7 +54461,11 @@ var render = function() {
                     { staticClass: "paginate_button page-item current " },
                     [
                       _c("button", { staticClass: "bg-blue border-primary" }, [
-                        _vm._v(_vm._s(_vm.currentPage))
+                        _vm._v(
+                          _vm._s(_vm.currentPage) +
+                            " of " +
+                            _vm._s(_vm.totalPage)
+                        )
                       ])
                     ]
                   ),
@@ -54938,7 +54936,7 @@ exports = module.exports = __webpack_require__(2)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -55198,7 +55196,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             currentSortDir: 'asc',
             // valiable to paginate
             n: 0,
-            pageSize: 5,
+            pageSize: 4,
             currentPage: 1,
             totalPage: 1,
             API: axios.create({
@@ -55213,12 +55211,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.getListTransaction();
     },
 
+
     computed: {
         orderbyTransactions: function orderbyTransactions() {
             var _this = this;
 
             if (this.transact instanceof Array) {
                 return this.transact.sort(function (a, b) {
+                    _this.totalPage = Math.ceil(_this.transact.length / _this.pageSize);
+                    if (_this.currentPage > _this.totalPage) {
+                        _this.currentPage = _this.totalPage;
+                    }
                     var modifier = 1;
                     if (_this.currentSortDir === 'desc') modifier = -1;
                     if (a[_this.currentSort] < b[_this.currentSort]) {
@@ -55236,6 +55239,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         }
     },
+
     methods: {
         // get list category
         getListCategory: function getListCategory() {
@@ -55245,6 +55249,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this2.categories = response.data;
             });
         },
+
 
         // get list transaction in wallet
         getListTransaction: function getListTransaction() {
@@ -55256,6 +55261,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 _this3.transact = response.data;
             });
         },
+
 
         // search transaction in wallet
         search: function search() {
@@ -55271,6 +55277,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
 
+
         // funtion to sort with asc or desc
         sort: function sort(s) {
             //if s == current sort, reverse
@@ -55279,6 +55286,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
             this.currentSort = s;
         },
+
         // paginate
         nextPage: function nextPage() {
             if (this.currentPage * this.pageSize < this.transact.length) {
@@ -55290,6 +55298,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.currentPage--;
             }
         },
+
 
         // add-transaction
         NewTransaction: function NewTransaction() {
@@ -55350,8 +55359,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     this.API.post('/api/transaction', params).then(function (response) {
                         if (_this6.transact instanceof Array) {
                             _this6.transact.push(response.data);
-                        } else {
-                            _this6.transact.push(response.data);
                         }
                     });
                     $('#AddTrans').modal('hide');
@@ -55362,6 +55369,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             }
         },
+
 
         // Update transaction
         editTransaction: function editTransaction(trans_id, id) {
@@ -55424,6 +55432,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
 
+
         // Delete transaction
         deleteTransaction: function deleteTransaction(trans_id, id) {
             var _this9 = this;
@@ -55439,6 +55448,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         }
     },
+
     watch: {
         '$route': function $route(to, from) {
             this.wallet.ID = to.params.id;
@@ -55813,7 +55823,11 @@ var render = function() {
                     { staticClass: "paginate_button page-item current" },
                     [
                       _c("button", { staticClass: "bg-blue border-primary" }, [
-                        _vm._v(_vm._s(_vm.currentPage))
+                        _vm._v(
+                          _vm._s(_vm.currentPage) +
+                            " of " +
+                            _vm._s(_vm.totalPage)
+                        )
                       ])
                     ]
                   ),
@@ -56859,6 +56873,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         this.getProfile();
     },
 
+
     methods: {
         getProfile: function getProfile() {
             var _this = this;
@@ -56909,7 +56924,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         onImageChange: function onImageChange(e) {
             this.image = e.target.files[0];
-            console.log(this.image);
         },
         formSubmit: function formSubmit(e) {
             var _this3 = this;
@@ -56919,7 +56933,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var formData = new FormData();
             formData.append('image', this.image);
             if (!this.image) {
-                this.errors.img = 'image not found 1';
+                this.errors.img = 'image not found';
             } else if (this.image.type == 'image/png' || this.image.type == 'image/jpeg' || this.image.type == 'image/jpg') {
                 this.API.post('/api/uploadImg', formData).then(function (response) {
 
@@ -56931,7 +56945,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
                 $('#editPhoto').modal('hide');
             } else {
-                this.errors.img = 'image not found';
+                this.errors.img = 'not image';
             }
         }
     }
@@ -56955,7 +56969,11 @@ var render = function() {
       _c(
         "button",
         { staticClass: "btn-primary", on: { click: _vm.editPhoto } },
-        [_c("i", { staticClass: "fas fa-plus-circle" }, [_vm._v("edit photo")])]
+        [
+          _c("i", { staticClass: "fas fa-plus-circle" }, [
+            _vm._v("  Edit photo")
+          ])
+        ]
       )
     ]),
     _vm._v(" "),
@@ -57056,7 +57074,7 @@ var render = function() {
           [
             _c("div", { staticClass: "modal-content" }, [
               _c("h5", { staticClass: "modal-title text-center blue" }, [
-                _vm._v("Edit Photo")
+                _vm._v(" Edit Photo")
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "card-body" }, [

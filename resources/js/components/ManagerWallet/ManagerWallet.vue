@@ -75,7 +75,7 @@
                                     <button class="" @click="prevPage">Previous</button>
                                 </li>
                                 <li class="paginate_button page-item current ">
-                                    <button class="bg-blue border-primary">{{currentPage}}</button>
+                                    <button class="bg-blue border-primary">{{currentPage}} of {{totalPage}}</button>
                                 </li>
                                 <li class="paginate_button page-item next">
                                     <button class="" @click="nextPage">Next</button>
@@ -187,7 +187,7 @@
                 currentSort: 'item',
                 currentSortDir: 'asc',
                 // valiable to paginate
-                pageSize: 5,
+                pageSize: 3,
                 currentPage: 1,
                 totalPage: 1,
                 API: axios.create({
@@ -198,18 +198,25 @@
                 })
             };
         },
+
         mounted() {
             this.getListWallet();
         },
+
         computed: {
             orderbyWallets: function () {
                 return this.wallets.sort((a, b) => {
+                    this.totalPage = Math.ceil(this.wallets.length/this.pageSize);
+                    if (this.currentPage > this.totalPage){
+                        this.currentPage = this.totalPage;
+                    }
                     let modifier = 1;
                     if (this.currentSortDir === 'desc') modifier = -1;
                     if (a[this.currentSort] < b[this.currentSort]) return -1 * modifier;
                     if (a[this.currentSort] > b[this.currentSort]) return 1 * modifier;
                     return 0;
                 })
+
                 // paginate for data
                     .filter((row, index) => {
                             let start = (this.currentPage - 1) * this.pageSize;
@@ -219,16 +226,19 @@
                     );
             },
         },
+
         methods: {
             getItem(event) {
                 this.currency_id = event.target.value;
             },
+
             // get currency
             getCurrency() {
                 this.API.get('/api/currency').then((response) => {
                     this.currencies = response.data
                 })
             },
+
             // add wallet
             NewModal() {
                 this.currencies = [];
@@ -241,6 +251,7 @@
                 this.getCurrency();
                 $('#addNew').modal('show');
             },
+
             addWallet() {
                 if (window.$cookies.get('token')) {
                     this.currencies = [];
@@ -248,7 +259,7 @@
                     this.errors.cash = '';
                     this.errors.name = '';
                     this.errors.curency_id = '';
-                    var params = {
+                    let params = {
                         'name': this.name,
                         'cash': this.cash,
                         'curency_id': this.currency_id
@@ -277,6 +288,7 @@
                     this.$router.push('/login');
                 }
             },
+
             // Edit wallet
             EditModal(id, ID) {
                 if (window.$cookies.get('token')) {
@@ -300,23 +312,24 @@
                     this.$router.push('/login');
                 }
             },
+
             EditWallet() {
                 if (window.$cookies.get('token')) {
                     this.errors.name = '';
                     this.errors.cash = '';
-                    var params = {
+                    let params = {
                         'id': this.wallet_id,
                         'name': this.name,
                         'cash': this.cash,
                         'curency_id': this.currency_id
                     };
-                    if (!this.name){
+                    if (!this.name) {
                         this.errors.name = 'name is require'
                     }
-                    if (!this.cash){
+                    if (!this.cash) {
                         this.errors.cash = 'cash is require'
                     }
-                    if (!(this.errors.name || this.errors.cash)){
+                    if (!(this.errors.name || this.errors.cash)) {
                         this.API.patch('/api/wallet/' + this.wallet_id, params)
                             .then((response) => {
                                 const wl = response.data;
@@ -332,6 +345,7 @@
                 }
 
             },
+
             DeleteWallet(id, ID) {
                 if (window.$cookies.get('token')) {
                     this.API.delete('/api/wallet/' + id);
@@ -340,11 +354,12 @@
                     alert(' Phien lam viec qua han ');
                     this.$router.push('/login')
                 }
-
             },
+
             ListTransaction(id) {
                 this.$router.push({name: 'transactions', params: {id}})
             },
+
             // get list transaction in wallet
             getListWallet() {
                 this.API.get('/api/wallet')
@@ -361,20 +376,20 @@
                 }
                 this.currentSort = s;
             },
+
             // paginate
             nextPage() {
                 if ((this.currentPage * this.pageSize) < this.wallets.length) {
                     this.currentPage++;
                 }
             },
+
             prevPage() {
                 if ((this.currentPage > 1)) {
                     this.currentPage--;
                 }
             }
-        }
-        ,
-        watch: {}
+        },
     }
 </script>
 

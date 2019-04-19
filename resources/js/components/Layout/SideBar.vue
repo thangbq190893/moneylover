@@ -19,7 +19,7 @@
                 <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
-                        <img :src="'/image/'+ img" type="image" class="img-circle elevation-2" alt="User Image">
+                        <!--<img :src="'/image/'+ img" type="image" class="img" alt="User Image">-->
                     </div>
                     <div class="info">
                         <p class="d-block white">
@@ -59,10 +59,10 @@
                                     </router-link>
                                 </li>
                                 <li class="nav-item">
-                                    <router-link tag="a" to="/chart1" class="nav-link active">
+                                    <a href="#" class="nav-link active">
                                         <i class="fa fa-circle-o nav-icon"></i>
                                         <p>Inactive Page</p>
-                                    </router-link>
+                                    </a>
                                 </li>
                             </ul>
                         </li>
@@ -141,7 +141,8 @@
 </script>
 
 <style scoped>
-    #aside1 {
-        /*background-image: url("/img/imgCustom/sidebar.jpg");*/
+    .img{
+        width: 40px;
+        height: 40px;
     }
 </style>

@@ -10,7 +10,7 @@ class Transaction extends Model
     protected $appends = ['walletname', 'item', 'currency_name', 'category_id'];
     protected $visible = ['id', 'category_id', 'wallet_id', 'cost', 'walletname', 'date', 'item', 'item_id', 'currency_name', 'event', 'note', 'with_people'];
     protected $table = 'transactions';
-    protected $fillable = ['wallet_id', 'cost', 'date', 'item_id', 'event'];
+    protected $fillable = ['wallet_id', 'cost', 'date', 'item_id', 'event','note','with_people'];
 
     public function traWallet()
     {
