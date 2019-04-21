@@ -21,6 +21,12 @@
         <br>
         <div>
             <h3 class="row justify-content-center">
+                <router-link class="btn-success" tag="button" v-bind:to="{name: 'forgot-password'}">Forgot password</router-link>
+            </h3>
+        </div>
+        <br>
+        <div>
+            <h3 class="row justify-content-center">
                 Don't have an Account? please register &nbsp; &nbsp;
                 <router-link class="btn-success" tag="button" v-bind:to="{name: 'register'}">Register</router-link>
             </h3>

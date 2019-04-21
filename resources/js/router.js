@@ -2,10 +2,12 @@ import Vue from 'vue';
 import Router from 'vue-router';
 import Login from './components/user/Login.vue';
 import Register from './components/user/Register.vue';
+import Forgotpassword from './components/user/ResetPassword.vue';
 import ManagerWallet from './components/ManagerWallet/ManagerWallet.vue'
 import Transaction from './components/ManagerWallet/Transactions.vue'
 import DonutChart from './components/ActivityGrap/DonutChart.vue';
 import Profile from './components/user/Profile.vue';
+import RecoverPassword from './components/user/RecoverPassword.vue';
 
 Vue.use(Router);
 
@@ -16,6 +18,16 @@ const router = new Router({
             path: '/login',
             name: 'login',
             component: Login
+        },
+        {
+            path: '/forgot-password',
+            name: 'forgot-password',
+            component: Forgotpassword
+        },
+        {
+            path: '/recover-password/:token',
+            name: 'recover-password',
+            component: RecoverPassword
         },
         {
             path: '/register',
