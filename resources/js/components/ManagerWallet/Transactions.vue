@@ -2,7 +2,13 @@
     <div class="card">
         <div class="card-header">
             <h3 class="card-title">Manager Transactions</h3>
-            <div class=" card-tools">
+            <div class=" card-tools row">
+                <div class="col-md-4">
+                    <select @change="getItemSearch($event)">
+                        <option value="">All</option>
+                        <option v-for="it in items"> {{it.name}}</option>
+                    </select>
+                </div>
                 <!-- SEARCH FORM -->
                 <form class="form-inline ml-3" action="./api/searchTransaction" method="post"
                       @submit.prevent="search()">
@@ -22,12 +28,13 @@
         <!-- /.card-header -->
         <div class="card-body">
             <div class="dataTables_wrapper dt-bootstrap4">
-                <div class="row">
-                    <div class="col-sm-12 col-md-6">
-
-                    </div>
-                    <div class="col-sm-12 col-md-6">
-
+                <div class="row justify-content-end ">
+                    <div class="col-md-6 navbar float-right">
+                        From:
+                        <datetime class="nav-item" type="date" v-model="date.firstDate" format="yyyy-MM-dd"></datetime>
+                        To:
+                        <datetime class="nav-item" type="date" v-model="date.secondDate" format="yyyy-MM-dd"></datetime>
+                        <button class="nav-item btn-success" @click="selectBetweenDate()">search Time</button>
                     </div>
                 </div>
                 <div class="row">
@@ -43,16 +50,8 @@
                                     Cash
                                     <button class="fa far fa-sort"></button>
                                 </th>
-                                <th rowspan="1" colspan="1" class="navbar-header navbar-right" @click="sort('event')">
-                                    Event
-                                    <button class="fa far fa-sort"></button>
-                                </th>
                                 <th rowspan="1" colspan="1" class="navbar-header navbar-right" @click="sort('note')">
                                     Note
-                                    <button class="fa far fa-sort"></button>
-                                </th>
-                                <th rowspan="1" colspan="1" class="navbar-header navbar-right"
-                                    @click="sort('with_people')">With People
                                     <button class="fa far fa-sort"></button>
                                 </th>
                                 <th rowspan="1" colspan="1" class="navbar-header navbar-right" @click="sort('date')">
@@ -66,9 +65,7 @@
                             <tr class="table-success" role="row" v-for="(trs,id) in orderbyTransactions" v-if="trs.id">
                                 <td rowspan="1" colspan="1">{{trs.item}}</td>
                                 <td rowspan="1" colspan="1">{{trs.cost | formatMoney}} {{trs.currency_name}}</td>
-                                <th rowspan="1" colspan="1">{{trs.event}}</th>
                                 <th rowspan="1" colspan="1">{{trs.note}}</th>
-                                <th rowspan="1" colspan="1">{{trs.with_people}}</th>
                                 <th rowspan="1" colspan="1">{{trs.date}}</th>
                                 <td rowspan="1" colspan="1">
                                     <button @click="editTransaction(trs.id,id)">
@@ -82,9 +79,7 @@
                             </tr>
                             </tbody>
                         </table>
-                        <p class="text-center" role="row" v-for="trs in orderbyTransactions" v-if="!trs.id">
-                            {{trs.event}}
-                        </p>
+                        <p class="red">{{errors.search}}</p>
                         <button class="btn btn-success" @click="NewTransaction">
                             <i class="fas fa-plus-circle">Add New</i>
                         </button>
@@ -132,25 +127,20 @@
                                 <ul class="list-group item">
                                     <p>Category</p>
                                     <select @change="getItem($event)">
-                                        <option value="">Please select Category</option>
+                                        <option value="0">Please select Category</option>
                                         <option v-for="cat in categories" :value="cat.id">{{cat.name}}</option>
                                     </select>
                                     <p>Item</p>
                                     <select @change="getValueItem($event)">
-                                        <option value="">Please select Item</option>
+                                        <option value="0">Please select Item</option>
                                         <option v-for="it in items" :value="it.id">{{it.name}}</option>
                                     </select>
                                     <p class="red"> {{errors.item_id}}</p>
                                     <p>Cost</p>
                                     <input class="item" v-model="cost" type="number">
                                     <p class="red">{{errors.cost}}</p>
-                                    <p>Event</p>
-                                    <input class="item" v-model="event" type="text">
-                                    <p class="red">{{errors.event}}</p>
                                     <p>Note</p>
                                     <input class="item" v-model="note" type="text">
-                                    <p>With people </p>
-                                    <input class="item" v-model="with_people" type="text">
                                 </ul>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -193,13 +183,9 @@
                                     <p>cost</p>
                                     <input class="item" v-model="cost" type="number">
                                     <p class="red">{{errors.cost}}</p>
-                                    <p>event</p>
-                                    <input class="item" v-model="event" type="text">
                                     <p class="red">{{errors.event}}</p>
                                     <p>note</p>
                                     <input class="item" v-model="note" type="text">
-                                    <p>with people </p>
-                                    <input class="item" v-model="with_people" type="text">
                                 </ul>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -216,29 +202,32 @@
 </template>
 
 <script>
+
     export default {
-        components: {},
         data() {
             return {
+                // errors
                 errors: {
                     item_id: '',
                     cost: '',
-                    event: '',
                     search: ''
                 },
                 //add trans
                 trans_id: '',
-                event: '',
                 cost: '',
                 note: '',
-                with_people: '',
                 item_id: '',
                 item_name: '',
                 category_id: '',
                 category_name: '',
                 items: [],
                 categories: [],
+                // search
                 getValue: '',
+                date: {
+                    firstDate: null,
+                    secondDate: null,
+                },
                 // get list transaction
                 transact: [],
                 http: '/api/wallet/' + this.$route.params.id + '/transactions',
@@ -261,14 +250,15 @@
 
         mounted() {
             this.getListTransaction();
+            this.getFullItem();
         },
 
         computed: {
             orderbyTransactions: function () {
                 if (this.transact instanceof Array) {
                     return this.transact.sort((a, b) => {
-                        this.totalPage = Math.ceil(this.transact.length/this.pageSize);
-                        if (this.currentPage > this.totalPage){
+                        this.totalPage = Math.ceil(this.transact.length / this.pageSize);
+                        if (this.currentPage > this.totalPage) {
                             this.currentPage = this.totalPage;
                         }
                         let modifier = 1;
@@ -308,18 +298,47 @@
             },
 
             // search transaction in wallet
+            getFullItem() {
+                this.items = '';
+                this.API.get('/api/item')
+                    .then((response) => {
+                        this.items = response.data;
+                    })
+            },
+            getItemSearch(event) {
+                this.getValue = event.target.value;
+            },
             search() {
+                this.errors.search = '';
                 let params = {
                     'search': this.getValue,
                     'walletId': this.$route.params.id
                 };
                 this.API.post('/api/searchTransaction', params)
                     .then((response) => {
-                        this.transact = response.data;
-                        this.currentPage = 1;
+                        if (response.data == 404) {
+                            this.errors.search = 'No data found for keyword:' + this.getValue;
+                        } else {
+                            this.transact = response.data;
+                            this.currentPage = 1;
+                        }
+                    })
+                    .catch((error) => {
+
                     })
             },
-
+            selectBetweenDate() {
+                this.transact = '';
+                let params = {
+                    'date1': this.date.firstDate,
+                    'date2': this.date.secondDate,
+                    'walletId': this.$route.params.id
+                };
+                this.API.post('/api/searchDate', params)
+                    .then((response) => {
+                        this.transact = response.data;
+                    })
+            },
             // funtion to sort with asc or desc
             sort: function (s) {
                 //if s == current sort, reverse
@@ -347,11 +366,8 @@
                 this.categories = [];
                 this.items = [];
                 this.cost = '';
-                this.event = '';
                 this.note = '';
                 this.item_id = '';
-                this.with_people = '';
-                this.errors.event = '';
                 this.errors.item_id = '';
                 this.errors.cost = '';
                 this.getListCategory();
@@ -364,39 +380,44 @@
             },
 
             getItem(event) {
-                this.item_id = event.target.value;
-                this.API.get('/api/category/' + event.target.value).then((response) => {
-                    this.items = response.data
-                });
+                if (event.target.value == 0) {
+                    this.items = '';
+                } else {
+                    this.item_id = event.target.value;
+                    this.API.get('/api/category/' + event.target.value).then((response) => {
+                        this.items = response.data;
+                    });
+                }
+                this.item_id = 0;
             },
 
             getValueItem(event) {
-                this.item_id = event.target.value
+                if (!this.items) {
+                    this.item_id = 0;
+                    console.log(this.items, this.item_id)
+                } else {
+                    this.item_id = event.target.value
+                }
             },
 
             createTrans() {
-                this.errors.event = "";
                 this.errors.item_id = "";
                 this.errors.cost = "";
                 let params = {
                     wallet_id: this.$route.params.id,
                     item_id: this.item_id,
-                    event: this.event,
                     cost: this.cost,
                     note: this.note,
-                    with_people: this.with_people
                 };
-                if (!this.item_id) {
+                if (this.item_id == 0) {
                     this.errors.item_id = "Item is required"
                 }
                 if (!this.cost) {
                     this.errors.cost = "Cost is required"
                 }
-                if (!this.event) {
-                    this.errors.event = "Event is required"
-                }
-                if (!(this.errors.item_id || this.errors.cost || this.errors.event)) {
+                if (!(this.errors.item_id || this.errors.cost)) {
                     if (window.$cookies.get('token')) {
+                        console.log(params)
                         this.API.post('/api/transaction', params).then((response) => {
                             if (this.transact instanceof Array) {
                                 this.transact.push(response.data);
@@ -417,7 +438,6 @@
                     this.categories = [];
                     this.getListCategory();
                     this.errors.cost = "";
-                    this.errors.event = "";
                     this.n = id + (this.currentPage - 1) * this.pageSize;
                     this.trans_id = trans_id;
                     this.API.get('/api/transaction/' + trans_id)
@@ -427,8 +447,6 @@
                                 this.item_id = response.data.item_id;
                                 this.cost = response.data.cost;
                                 this.note = response.data.note;
-                                this.event = response.data.event;
-                                this.with_people = response.data.with_people;
                                 $('#EditTrans').modal('show');
                             }
                         )
@@ -440,22 +458,16 @@
 
             editTrans() {
                 this.errors.cost = "";
-                this.errors.event = "";
                 let params = {
                     wallet_id: this.$route.params.id,
                     item_id: this.item_id,
-                    event: this.event,
                     cost: this.cost,
                     note: this.note,
-                    with_people: this.with_people
                 };
                 if (this.cost == "") {
                     this.errors.cost = "Cost is required"
                 }
-                if (this.event == "") {
-                    this.errors.event = "Event is required"
-                }
-                if (!(this.errors.cost || this.errors.event)) {
+                if (!(this.errors.cost)) {
                     if (window.$cookies.get('token')) {
                         this.API.patch('/api/transaction/' + this.trans_id, params).then((response) => {
                             const trs = response.data;

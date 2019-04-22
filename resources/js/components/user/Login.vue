@@ -20,9 +20,9 @@
         </div>
         <br>
         <div>
-            <h3 class="row justify-content-center">
-                <router-link class="btn-success" tag="button" v-bind:to="{name: 'forgot-password'}">Forgot password</router-link>
-            </h3>
+            <p class="row justify-content-center">
+                <router-link tag="a" v-bind:to="{name: 'forgot-password'}">Forgot password</router-link>
+            </p>
         </div>
         <br>
         <div>
@@ -46,6 +46,7 @@
                 password: ""
             }
         },
+
         methods: {
             login() {
                 axios.post('/api/login', {
@@ -85,4 +86,5 @@
 </script>
 
 <style scoped>
+
 </style>

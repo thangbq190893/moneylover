@@ -58,6 +58,7 @@ const router = new Router({
         }
     ],
 });
+
 router.beforeEach((to, from, next) => {
     if (to.meta.requiresAuth) {
         const token = window.$cookies.get('token');
@@ -69,4 +70,5 @@ router.beforeEach((to, from, next) => {
     }
     next()
 });
+
 export default router

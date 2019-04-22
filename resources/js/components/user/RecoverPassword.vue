@@ -1,19 +1,22 @@
 <template>
-    <div>
-        <p>{{message}}</p>
-        <form action="" @submit.prevent="createNewPassword()">
-            <ul>
-                <li>New password
-                    <input type="password" v-model="password">
+    <div class="container">
+        <p class="bg-success red">{{message}}</p>
+        <div class="justify-content-center row">
+            <form action="" @submit.prevent="createNewPassword()">
+                <div class="form-group">
+                    <label for="password">New password</label>
+                    <input id="password" type="password" class="form-control" v-model="password">
                     {{errors.password}}
-                </li>
-                <li>Confirm password
-                    <input type="password" v-model="password_confirmation">
+                </div>
+                <div class="form-group">
+                    <label for="confirmationpassword">Confirm password</label>
+                    <input id="confirmationpassword" type="password" class="form-control"
+                           v-model="password_confirmation">
                     {{errors.password_confirmation}}
-                </li>
-            </ul>
-            <button type="submit">create new password</button>
-        </form>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">create new password</button>
+            </form>
+        </div>
     </div>
 </template>
 
@@ -22,6 +25,7 @@
 
     export default {
         name: "RecoverPassword",
+
         data() {
             return {
                 'token': this.$route.params.token,
@@ -35,9 +39,11 @@
                 }
             }
         },
+
         mounted() {
             this.getDataUser();
         },
+
         methods: {
             getDataUser() {
                 this.message = '';
@@ -46,22 +52,18 @@
                         this.email = response.data.email
                     })
                     .catch((error) => {
-                        if (error.response) {
-                            // The request was made and the server responded with a status code
-                            // that falls out of the range of 2xx
-                            if (error.response.status == 404) {
-                                this.message = error.response.data.message;
-                                console.log('error.message', error.response.data.message);
-                                console.log('status', error.response.status);
-                            }
-                            if (error.response.status == 422) {
-                                this.message = error.response.data.email[0];
-                                console.log('errors.email', error.response.data.email[0]);
-                                console.log('status', error.response.status);
+                            if (error.response) {
+                                if (error.response.status == 404) {
+                                    this.message = error.response.data.message;
+                                }
+                                if (error.response.status == 422) {
+                                    this.message = error.response.data.email[0];
+                                }
                             }
                         }
-                    });
+                    );
             },
+
             createNewPassword() {
                 this.message = '';
                 this.errors.password = '';

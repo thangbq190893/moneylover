@@ -41,6 +41,7 @@ Route::resource('item', 'ItemController');
 Route::get('category', 'CategoryController@index');
 Route::get('category/{id}', 'CategoryController@show');
 Route::get('currency', 'CurrencyController@index');
+Route::post('searchDate', 'TransactionController@searchDate');
 
 Route::group([
     'namespace' => 'Auth',

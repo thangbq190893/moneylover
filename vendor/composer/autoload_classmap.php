@@ -40,6 +40,7 @@ return array(
     'App\\Http\\Model\\Wallet' => $baseDir . '/app/Http/Model/Wallet.php',
     'App\\Http\\Requests\\ImageRequest' => $baseDir . '/app/Http/Requests/ImageRequest.php',
     'App\\Http\\Requests\\TransactionRequest' => $baseDir . '/app/Http/Requests/TransactionRequest.php',
+    'App\\Http\\Requests\\UserRequest' => $baseDir . '/app/Http/Requests/UserRequest.php',
     'App\\Http\\Requests\\WalletRequest' => $baseDir . '/app/Http/Requests/WalletRequest.php',
     'App\\Notifications\\PasswordResetRequest' => $baseDir . '/app/Notifications/PasswordResetRequest.php',
     'App\\Notifications\\PasswordResetSuccess' => $baseDir . '/app/Notifications/PasswordResetSuccess.php',

@@ -50,7 +50,7 @@
                                         <i class="fa fa-edit blue"></i>
                                     </button>
                                     /
-                                    <button @click="DeleteWallet(wl.id,id)">
+                                    <button @click="DeleteModal(wl.id,id)">
                                         <i class="fa fa-trash red"></i>
                                     </button>
                                 </td>
@@ -106,12 +106,16 @@
                                     <p>Tên Ví</p>
                                     <input class="item" name="name" v-model="name" type="text">
                                     <p class="red">{{errors.name}}</p>
-                                    <p>Total</p>
-                                    <input class="item" v-model="cash" type="number">
+                                    <p>Total {{cash}}</p>
+                                    <input
+                                            class="form-input input-lg"
+                                            v-model="cash"
+                                            v-money="money"
+                                            style="text-align: right">
                                     <p class="red">{{errors.cash}}</p>
                                     <p>Currency</p>
                                     <select @change="getItem($event)">
-                                        <option value="">Choose Currency</option>
+                                        <option value="0">Choose Currency</option>
                                         <option v-for="curr in currencies" :value="curr.id">{{ curr.name }}
                                         </option>
                                     </select>
@@ -159,6 +163,23 @@
                 </div>
             </div>
         </div>
+        <!-- Modal Delete Wallet-->
+        <div class="modal fade " id="deleteWallet" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <form @submit.prevent="deleteWallet()" class="">
+                        <h5 class="list-group-item bg-danger">
+                            Are you sure delete?
+                        </h5>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -168,6 +189,12 @@
         components: {},
         data() {
             return {
+                money: {
+                    decimal: ',',
+                    thousands: '.',
+                    precision:0,
+                    masked: false /* doesn't work with directive */
+                },
                 errors: {
                     name: '',
                     cash: '',
@@ -206,8 +233,8 @@
         computed: {
             orderbyWallets: function () {
                 return this.wallets.sort((a, b) => {
-                    this.totalPage = Math.ceil(this.wallets.length/this.pageSize);
-                    if (this.currentPage > this.totalPage){
+                    this.totalPage = Math.ceil(this.wallets.length / this.pageSize);
+                    if (this.currentPage > this.totalPage) {
                         this.currentPage = this.totalPage;
                     }
                     let modifier = 1;
@@ -264,13 +291,14 @@
                         'cash': this.cash,
                         'curency_id': this.currency_id
                     };
+                    console.log(params);
                     if (!this.name) {
                         this.errors.name = 'wallet name is require'
                     }
                     if (!this.cash) {
                         this.errors.cash = 'cash is require'
                     }
-                    if (!this.currency_id) {
+                    if (this.currency_id == 0) {
                         this.errors.curency_id = 'please choose currency'
                     }
                     if (!(this.errors.curency_id || this.errors.cash || this.errors.name)) {
@@ -345,11 +373,16 @@
                 }
 
             },
-
-            DeleteWallet(id, ID) {
+            DeleteModal(id, ID) {
+                this.n = ID + (this.currentPage - 1) * this.pageSize;
+                this.wallet_id = id;
+                $('#deleteWallet').modal('show')
+            },
+            deleteWallet() {
                 if (window.$cookies.get('token')) {
-                    this.API.delete('/api/wallet/' + id);
-                    this.wallets.splice(ID + (this.currentPage - 1) * this.pageSize, 1);
+                    this.API.delete('/api/wallet/' + this.wallet_id);
+                    this.wallets.splice(this.n, 1);
+                    $('#deleteWallet').modal('hide')
                 } else {
                     alert(' Phien lam viec qua han ');
                     this.$router.push('/login')

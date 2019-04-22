@@ -1,8 +1,8 @@
 <template>
     <div class="container">
+        <h3 class="bg-success red">{{message}}</h3>
         <div class="justify-content-center row">
-            <p>{{message}}</p>
-            <form v-on:submit.prevent="resetPassword()" method="post" autocomplete="off">
+            <form v-on:submit.prevent="resetPassword()" method="post" autocomplete="off" class="form-group">
                 <h1 class="h3 mb-3 font-weight-normal text-white">
                     <i> Please fill your email !</i>
                 </h1>
@@ -29,12 +29,14 @@
 
     export default {
         name: "ResetPassword",
+
         data() {
             return {
                 'email': '',
                 'message': ''
             }
         },
+
         methods: {
             resetPassword() {
                 this.message = '';
@@ -44,25 +46,19 @@
                 axios.post('/api/password/create', params)
                     .then((response) => {
                         this.message = response.data.message;
-                        console.log(response.data);
                     })
                     .catch((error) => {
-                        // Error
-                        if (error.response) {
-                            // The request was made and the server responded with a status code
-                            // that falls out of the range of 2xx
-                            if (error.response.status == 404) {
-                                this.message = error.response.data.message;
-                                console.log('error.message', error.response.data.message);
-                                console.log('status', error.response.status);
-                            }
-                            if (error.response.status == 422) {
-                                this.message = error.response.data.email[0];
-                                console.log('errors.email', error.response.data.email[0]);
-                                console.log('status', error.response.status);
+                            // Error
+                            if (error.response) {
+                                if (error.response.status == 404) {
+                                    this.message = error.response.data.message;
+                                }
+                                if (error.response.status == 422) {
+                                    this.message = error.response.data.email[0];
+                                }
                             }
                         }
-                    });
+                    );
             }
         }
     }

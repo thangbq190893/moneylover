@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\Model;
 class Transaction extends Model
 {
     protected $appends = ['walletname', 'item', 'currency_name', 'category_id'];
-    protected $visible = ['id', 'category_id', 'wallet_id', 'cost', 'walletname', 'date', 'item', 'item_id', 'currency_name', 'event', 'note', 'with_people'];
+    protected $visible = ['id', 'category_id', 'wallet_id', 'cost', 'walletname', 'date', 'item', 'item_id', 'currency_name', 'note'];
     protected $table = 'transactions';
-    protected $fillable = ['wallet_id', 'cost', 'date', 'item_id', 'event','note','with_people'];
+    protected $fillable = ['wallet_id', 'cost', 'date', 'item_id', 'note'];
 
     public function traWallet()
     {
@@ -50,12 +50,20 @@ class Transaction extends Model
         $query = Transaction::where(function ($query) use ($value1) {
             $query->where('wallet_id', '=', $value1);
         })->where(function ($query) use ($value2) {
-            $query->where('event', 'like', '%' . $value2 . '%')
-                ->orwhere('note', 'like', '%' . $value2 . '%')
-                ->orwhere('with_people', 'like', '%' . $value2 . '%')
+            $query->where('note', 'like', '%' . $value2 . '%')
                 ->orwhere('cost', 'like', '%' . $value2 . '%')
                 ->orwhere('date', 'like', '%' . $value2 . '%')
                 ->orwhere('item_id', ItemHelper::getItemId($value2));
+        })->get();
+        return $query;
+    }
+
+    public static function betweenDate($value1, $value2, $value3)
+    {
+        $query = Transaction::where(function ($query) use ($value1) {
+            $query->where('wallet_id', '=', $value1);
+        })->where(function ($query) use ($value2, $value3) {
+            $query->whereBetween('date', [$value2, $value3]);
         })->get();
         return $query;
     }

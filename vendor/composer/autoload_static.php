@@ -507,6 +507,7 @@ class ComposerStaticInitff9096546ff91d0165e008d4dd9df8cb
         'App\\Http\\Model\\Wallet' => __DIR__ . '/../..' . '/app/Http/Model/Wallet.php',
         'App\\Http\\Requests\\ImageRequest' => __DIR__ . '/../..' . '/app/Http/Requests/ImageRequest.php',
         'App\\Http\\Requests\\TransactionRequest' => __DIR__ . '/../..' . '/app/Http/Requests/TransactionRequest.php',
+        'App\\Http\\Requests\\UserRequest' => __DIR__ . '/../..' . '/app/Http/Requests/UserRequest.php',
         'App\\Http\\Requests\\WalletRequest' => __DIR__ . '/../..' . '/app/Http/Requests/WalletRequest.php',
         'App\\Notifications\\PasswordResetRequest' => __DIR__ . '/../..' . '/app/Notifications/PasswordResetRequest.php',
         'App\\Notifications\\PasswordResetSuccess' => __DIR__ . '/../..' . '/app/Notifications/PasswordResetSuccess.php',

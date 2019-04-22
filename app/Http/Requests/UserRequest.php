@@ -12,6 +12,7 @@ class UserRequest extends FormRequest
     {
         throw new HttpResponseException(response()->json($validator->errors(), 422));
     }
+
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -31,18 +32,15 @@ class UserRequest extends FormRequest
     {
         return [
             'email' => 'required|string|email',
-//            'password' => 'required|string|confirmed',
-//            'token' => 'required|string',
         ];
     }
+
     public function messages()
     {
         return [
             'email.required' => 'email is required',
             'email.string' => 'email is string',
-            'email.email' => 'email must have type is email',
-//            'password' => 'required|string|confirmed',
-//            'token' => 'required|string',
+            'email.email' => 'Email invalidate',
         ];
     }
 }

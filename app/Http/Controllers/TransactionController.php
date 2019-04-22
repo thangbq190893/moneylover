@@ -19,12 +19,10 @@ class TransactionController extends Controller
     public function store(TransactionRequest $request)
     {
         $transaction = Transaction::create([
-            'event' => $request->event,
             'wallet_id' => $request->wallet_id,
             'date' => Carbon::now()->toDateString(),
             'cost' => $request->cost,
             'note' => $request->note,
-            'with_people' => $request->with_people,
             'item_id' => $request->item_id
         ]);
         return response()->json($transaction);
@@ -46,11 +44,9 @@ class TransactionController extends Controller
     {
         $transaction = Transaction::findOrFail($id);
         $transaction->wallet_id = $request->wallet_id;
-        $transaction->event = $request->event;
         $transaction->date = Carbon::now()->toDateString();
         $transaction->cost = $request->cost;
         $transaction->note = $request->note;
-        $transaction->with_people = $request->with_people;
         $transaction->item_id = $request->item_id;
         $transaction->save();
         return response()->json($transaction);
@@ -72,10 +68,22 @@ class TransactionController extends Controller
         } else {
             $transactions = Transaction::searchTrans($walletid, $search);
             if (count($transactions) == 0) {
-                return \response()->json([['event' => 'Không tìm được kết quả phù hợp cho : ' . $search]]);
+                return \response()->json(404);
             } else {
                 return response()->json($transactions);
             }
         }
+    }
+
+    public function searchDate(Request $request)
+    {
+        $firstDate = $request->date1;
+        $secondDate = $request->date2;
+        $walletid = $request->walletId;
+        $trans = Transaction::betweenDate($walletid, $firstDate, $secondDate);
+        if (!isset($trans)) {
+            return response()->json(404);
+        }
+        return response()->json($trans);
     }
 }
