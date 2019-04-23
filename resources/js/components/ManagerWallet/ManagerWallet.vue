@@ -104,15 +104,14 @@
                             <form action="./api/wallet" method="post" @submit.prevent="addWallet()" class="col-lg-6">
                                 <ul class="list-group-item">
                                     <p>Tên Ví</p>
-                                    <input class="item" name="name" v-model="name" type="text">
+                                    <input class="item" name="name" v-model="name" type="text" style="padding-left: 10px">
                                     <p class="red">{{errors.name}}</p>
-                                    <p>Total {{cash}}</p>
+                                    <p>Total </p>
                                     <input
                                             class="form-input input-lg"
                                             v-model="cash"
                                             v-money="money"
-                                            style="text-align: right">
-                                    <p class="red">{{errors.cash}}</p>
+                                            style="text-align: left; padding-left: 10px">
                                     <p>Currency</p>
                                     <select @change="getItem($event)">
                                         <option value="0">Choose Currency</option>
@@ -150,7 +149,11 @@
                                     <input class="item" name="name" v-model="name" type="text">
                                     <p class="red">{{errors.name}}</p>
                                     <p>Total</p>
-                                    <input class="item" v-model="cash" type="number">{{currency_name}}
+                                    <input
+                                            class="form-input input-lg"
+                                            v-model="cash"
+                                            v-money="money"
+                                            style="text-align: right">{{currency_name}}
                                     <p class="red">{{errors.cash}}</p>
                                 </ul>
                                 <div class="modal-footer">
@@ -192,7 +195,7 @@
                 money: {
                     decimal: ',',
                     thousands: '.',
-                    precision:0,
+                    precision: 0,
                     masked: false /* doesn't work with directive */
                 },
                 errors: {
@@ -251,10 +254,14 @@
                             if (index >= start && index < end) return true;
                         }
                     );
-            },
+            }
         },
 
         methods: {
+            formatValue(newValue) {
+                return newValue.toString().replace(/\./g, '');
+            },
+
             getItem(event) {
                 this.currency_id = event.target.value;
             },
@@ -288,10 +295,9 @@
                     this.errors.curency_id = '';
                     let params = {
                         'name': this.name,
-                        'cash': this.cash,
+                        'cash': this.formatValue(this.cash),
                         'curency_id': this.currency_id
                     };
-                    console.log(params);
                     if (!this.name) {
                         this.errors.name = 'wallet name is require'
                     }
@@ -348,7 +354,7 @@
                     let params = {
                         'id': this.wallet_id,
                         'name': this.name,
-                        'cash': this.cash,
+                        'cash': this.formatValue(this.cash),
                         'curency_id': this.currency_id
                     };
                     if (!this.name) {

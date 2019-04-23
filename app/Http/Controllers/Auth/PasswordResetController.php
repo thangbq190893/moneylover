@@ -25,9 +25,7 @@ class PasswordResetController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
-            return response()->json([
-                'message' => "We can't find a user  with that email address. "
-            ],404);
+            return response()->json(404);
         }
 
         $passwordReset = PasswordReset::updateOrCreate(
@@ -43,9 +41,7 @@ class PasswordResetController extends Controller
                 new PasswordResetRequest($passwordReset->token)
             );
 
-            return response()->json([
-                'message' => 'We have e-mailed your password reset link!'
-            ],200);
+            return response()->json(200);
         }
     }
 
@@ -61,16 +57,12 @@ class PasswordResetController extends Controller
         $passwordReset = PasswordReset::where('token', $token)->first();
 
         if (!$passwordReset) {
-            return response()->json([
-                'message' => 'This password reset token is invalid.'
-            ],404);
+            return response()->json(404);
         }
 
-        if (Carbon::parse($passwordReset->updated_at)->addSeconds(1500)->isPast()) {
+        if (Carbon::parse($passwordReset->updated_at)->addSeconds(36000)->isPast()) {
             $passwordReset->delete();
-            return response()->json([
-                'message' => 'This password reset token is invalid.'
-            ],404);
+            return response()->json(404);
         }
 
         return response()->json($passwordReset);
@@ -95,17 +87,13 @@ class PasswordResetController extends Controller
         ])->first();
 
         if (!$passwordReset) {
-            return response()->json([
-                'message' => 'This password reset token is invalid.'
-            ],404);
+            return response()->json(404);
         }
 
         $user = User::where('email', $passwordReset->email)->first();
 
         if (!$user) {
-            return response()->json([
-                'message' => "We can't find a user with that e-mail address."
-            ],404);
+            return response()->json(404);
         }
 
         $user->password = bcrypt($request->password);

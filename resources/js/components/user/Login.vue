@@ -1,10 +1,10 @@
 <template>
-    <div class="container">
-        <div class="justify-content-center row">
+    <div class="container container-fluid" style=" padding-right: 200px; padding-top: 70px">
+        <div class="justify-content-center row" >
             <form v-on:submit.prevent="login()" method="post" autocomplete="off">
-                <h1 class="h3 mb-3 font-weight-normal text-white">
-                    <i> Please sign in to use!</i>
-                </h1>
+                <div>
+                    <h3 class="blue" style="text-align: center">Log in</h3>
+                </div>
                 <div class="form-group">
                     <label for="email">Email Address</label>
                     <input id="email" type="email" class="form-control" v-model="email" name="email"
@@ -26,10 +26,10 @@
         </div>
         <br>
         <div>
-            <h3 class="row justify-content-center">
+            <h5 class="row justify-content-center">
                 Don't have an Account? please register &nbsp; &nbsp;
-                <router-link class="btn-success" tag="button" v-bind:to="{name: 'register'}">Register</router-link>
-            </h3>
+                <router-link class="btn btn-sm btn-primary" tag="button" v-bind:to="{name: 'register'}">Register</router-link>
+            </h5>
         </div>
     </div>
 </template>
@@ -42,8 +42,8 @@
         name: "login",
         data() {
             return {
-                email: "",
-                password: ""
+                email: '',
+                password: ''
             }
         },
 
@@ -78,7 +78,6 @@
                         }
                     })
                     .catch((err) => {
-                        console.log(err)
                     });
             },
         },

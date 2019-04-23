@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <p class="bg-success red">{{message}}</p>
+        <p class=" message">{{message}}</p>
         <div class="justify-content-center row">
             <form action="" @submit.prevent="createNewPassword()">
                 <div class="form-group">
@@ -49,7 +49,11 @@
                 this.message = '';
                 axios.get('/api/password/find/' + this.token)
                     .then((response) => {
-                        this.email = response.data.email
+                        if (response.data == 404) {
+                            this.message = 'This password reset token is invalid.'
+                        } else {
+                            this.email = response.data.email
+                        }
                     })
                     .catch((error) => {
                             if (error.response) {
@@ -83,25 +87,14 @@
                     };
                     axios.post('/api/password/reset', params)
                         .then((response) => {
-                            if (response.data) {
-                                this.message = 'changed password success'
+                            if (response.data == 404) {
+                                this.message = 'We can\'t find a user with that e-mail address.'
+                            } else {
+                                this.$router.push('/login')
                             }
                         })
                         .catch((error) => {
-                                if (error.response) {
-                                    // The request was made and the server responded with a status code
-                                    // that falls out of the range of 2xx
-                                    if (error.response.status == 404) {
-                                        this.message = error.response.data.message;
-                                        console.log('error.message', error.response.data.message);
-                                        console.log('status', error.response.status);
-                                    }
-                                    if (error.response.status == 422) {
-                                        this.message = error.response.data.email[0];
-                                        console.log('errors.email', error.response.data.email[0]);
-                                        console.log('status', error.response.status);
-                                    }
-                                }
+
                             }
                         );
                 }
@@ -112,5 +105,9 @@
 </script>
 
 <style scoped>
-
+    .message {
+        padding-top: 50px;
+        text-align: center;
+        color: red;
+    }
 </style>

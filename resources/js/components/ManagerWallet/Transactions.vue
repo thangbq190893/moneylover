@@ -39,7 +39,7 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        <table class="table table-bordered table-hover" role="grid">
+                        <table class="table table-bordered table-hover" role="grid" v-if="!errors.search">
                             <thead class="thead-dark">
                             <tr role="row">
                                 <th rowspan="1" colspan="1" class="navbar-header navbar-right" @click="sort('item')">
@@ -50,7 +50,8 @@
                                     Cash
                                     <button class="fa far fa-sort"></button>
                                 </th>
-                                <th rowspan="1" colspan="1" class="navbar-header navbar-right" @click="sort('note')">
+                                <th rowspan="1" colspan="1" class="navbar-header navbar-right" @click="sort('note')"
+                                    style="width: 200px">
                                     Note
                                     <button class="fa far fa-sort"></button>
                                 </th>
@@ -65,14 +66,17 @@
                             <tr class="table-success" role="row" v-for="(trs,id) in orderbyTransactions" v-if="trs.id">
                                 <td rowspan="1" colspan="1">{{trs.item}}</td>
                                 <td rowspan="1" colspan="1">{{trs.cost | formatMoney}} {{trs.currency_name}}</td>
-                                <th rowspan="1" colspan="1">{{trs.note}}</th>
+                                <th v-if="trs.note.length < 18"> {{trs.note}}</th>
+                                <th rowspan="1" colspan="1" v-if="trs.note.length >=18 ">
+                                    {{trs.note.substring(0,18)+'...'}}
+                                </th>
                                 <th rowspan="1" colspan="1">{{trs.date}}</th>
                                 <td rowspan="1" colspan="1">
-                                    <button @click="editTransaction(trs.id,id)">
+                                    <button @click="editModal(trs.id,id)">
                                         <i class="fa fa-edit blue"></i>
                                     </button>
                                     /
-                                    <button @click="deleteTransaction(trs.id,id)">
+                                    <button @click="deleteModal(trs.id,id)">
                                         <i class="fa fa-trash red"></i>
                                     </button>
                                 </td>
@@ -137,10 +141,11 @@
                                     </select>
                                     <p class="red"> {{errors.item_id}}</p>
                                     <p>Cost</p>
-                                    <input class="item" v-model="cost" type="number">
+                                    <input class="form-input input-lg" v-model="cost" v-money="money"
+                                           style=" text-align: left; padding-left: 10px">
                                     <p class="red">{{errors.cost}}</p>
                                     <p>Note</p>
-                                    <input class="item" v-model="note" type="text">
+                                    <input class="item" v-model="note" type="text" style="padding-left: 10px">
                                 </ul>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -181,7 +186,8 @@
                                         <option v-for="it in items" :value="it.id">{{it.name}}</option>
                                     </select>
                                     <p>cost</p>
-                                    <input class="item" v-model="cost" type="number">
+                                    <input class="form-input input-lg" v-model="cost" v-money="money"
+                                           style="text-align: right">
                                     <p class="red">{{errors.cost}}</p>
                                     <p class="red">{{errors.event}}</p>
                                     <p>note</p>
@@ -198,6 +204,23 @@
             </div>
         </div>
         <!--/add transaction -->
+        <!-- Modal Delete Transaction-->
+        <div class="modal fade " id="deleteTransaction" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <form @submit.prevent="deleteTransaction()" class="">
+                        <h5 class="list-group-item bg-danger">
+                            Are you sure delete?
+                        </h5>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -206,6 +229,12 @@
     export default {
         data() {
             return {
+                money: {
+                    decimal: ',',
+                    thousands: '.',
+                    precision: 0,
+                    masked: false /* doesn't work with directive */
+                },
                 // errors
                 errors: {
                     item_id: '',
@@ -282,6 +311,10 @@
         },
 
         methods: {
+            formatValue(newValue) {
+                return newValue.toString().replace(/\./g, '');
+            },
+
             // get list category
             getListCategory() {
                 this.API.get('/api/category').then((response) => {
@@ -328,6 +361,7 @@
                     })
             },
             selectBetweenDate() {
+                this.errors.search = '';
                 this.transact = '';
                 let params = {
                     'date1': this.date.firstDate,
@@ -336,7 +370,11 @@
                 };
                 this.API.post('/api/searchDate', params)
                     .then((response) => {
-                        this.transact = response.data;
+                        if (response.data == 404) {
+                            this.errors.search = 'search no match!!!'
+                        } else {
+                            this.transact = response.data;
+                        }
                     })
             },
             // funtion to sort with asc or desc
@@ -394,7 +432,6 @@
             getValueItem(event) {
                 if (!this.items) {
                     this.item_id = 0;
-                    console.log(this.items, this.item_id)
                 } else {
                     this.item_id = event.target.value
                 }
@@ -406,7 +443,7 @@
                 let params = {
                     wallet_id: this.$route.params.id,
                     item_id: this.item_id,
-                    cost: this.cost,
+                    cost: this.formatValue(this.cost),
                     note: this.note,
                 };
                 if (this.item_id == 0) {
@@ -417,7 +454,6 @@
                 }
                 if (!(this.errors.item_id || this.errors.cost)) {
                     if (window.$cookies.get('token')) {
-                        console.log(params)
                         this.API.post('/api/transaction', params).then((response) => {
                             if (this.transact instanceof Array) {
                                 this.transact.push(response.data);
@@ -433,7 +469,7 @@
             },
 
             // Update transaction
-            editTransaction(trans_id, id) {
+            editModal(trans_id, id) {
                 if (window.$cookies.get('token')) {
                     this.categories = [];
                     this.getListCategory();
@@ -461,7 +497,7 @@
                 let params = {
                     wallet_id: this.$route.params.id,
                     item_id: this.item_id,
-                    cost: this.cost,
+                    cost: this.formatValue(this.cost),
                     note: this.note,
                 };
                 if (this.cost == "") {
@@ -484,19 +520,23 @@
             },
 
             // Delete transaction
-            deleteTransaction(trans_id, id) {
+            deleteModal(trans_id, id) {
+                this.trans_id = trans_id;
+                this.n = id + (this.currentPage - 1) * this.pageSize;
+                $('#deleteTransaction').modal('show');
+            },
+            deleteTransaction() {
                 if (window.$cookies.get('token')) {
-                    this.n = id + (this.currentPage - 1) * this.pageSize;
-                    this.API.delete('/api/transaction/' + trans_id)
+                    this.API.delete('/api/transaction/' + this.trans_id)
                         .then((res) => {
                                 this.transact.splice(this.n, 1);
                             }
-                        )
+                        );
+                    $('#deleteTransaction').modal('hide');
                 } else {
                     alert("phien lam viec qua han");
                     this.$router.push('/login');
                 }
-
             }
         },
 

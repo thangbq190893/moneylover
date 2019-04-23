@@ -1,7 +1,7 @@
 <template>
     <div>
         <!-- Main Sidebar Container -->
-        <aside v-if="!token" class="main-sidebar sidebar-dark-primary elevation-4" id="aside1">
+        <aside v-if="!token" class="main-sidebar" style=" background-color: #F5F6FA" id="aside1">
 
         </aside>
         <!-- Main Sidebar Container -->

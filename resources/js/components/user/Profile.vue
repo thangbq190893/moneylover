@@ -41,14 +41,19 @@
                 <div class="modal-content">
                     <h5 class="modal-title text-center blue"> Edit Photo</h5>
                     <div class="card-body">
-                        <form @submit="formSubmit" enctype="multipart/form-data">
+                        <form @submit="formSubmit" enctype="multipart/form-data ">
                             <strong>Image:</strong>
-                            <input type="file"
-                                   class="form-control"
-                                   v-on:change="onImageChange"
-                                   name="image"
-                                   id="myInput">
-                            <p class="red">{{errors.img}}</p>
+                            <div class="">
+                                <img :src="url" v-if="url" class="previewImage">
+                            </div>
+                            <div class="">
+                                <input type="file"
+                                       class="form-control"
+                                       v-on:change="onImageChange"
+                                       name="image"
+                                       id="myInput">
+                                <p class="red">{{errors.img}}</p>
+                            </div>
                             <div class="modal-footer">
                                 <button class="btn btn-success">Submit</button>
                                 <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -70,6 +75,7 @@
             return {
                 //upload photo
                 image: '',
+                url: '',
                 errors: {
                     img: '',
                 },
@@ -154,6 +160,7 @@
 
             onImageChange(e) {
                 this.image = e.target.files[0];
+                this.url = URL.createObjectURL(this.image);
             },
 
             formSubmit(e) {
@@ -186,6 +193,10 @@
 
 <style scoped>
     .imgcustom {
+        width: 200px;
+        height: 200px;
+    }
+    .previewImage {
         width: 200px;
         height: 200px;
     }

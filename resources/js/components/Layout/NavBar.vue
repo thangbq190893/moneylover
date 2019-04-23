@@ -1,6 +1,6 @@
 <template>
     <!-- Navbar -->
-    <nav class="nav main-header navbar navbar-expand navbar-light border-bottom ">
+    <nav class="nav main-header navbar navbar-expand navbar-light border-bottom " style="width: auto">
         <!-- Left navbar links -->
         <ul v-if="token" class="nav navbar-nav">
             <li  class="nav-item" >
@@ -12,9 +12,6 @@
         </ul>
         <h3 v-if="!token" class="nav-item col-lg-9 red justify-content-center" >
             <h2>Chào mừng bạn đến với MoneyLover</h2>
-        </h3>
-        <h3 v-if="!token" class="col-lg-3 ">
-                <router-link class="btn-success"  tag="button" v-bind:to="{name: 'login'}">Login</router-link>
         </h3>
     </nav>
     <!-- /.navbar -->

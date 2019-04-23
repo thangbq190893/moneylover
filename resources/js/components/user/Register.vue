@@ -1,11 +1,13 @@
 <template>
-    <div class="container">
+    <div class="container" style="padding-top: 50px; padding-right: 150px">
         <div class="row">
             <div class="col-md-6 mx-auto">
                 <form v-on:submit.prevent="checkform" method="post">
-                    <h1 class="h3 mb-3 font-weight-normal">
-                        Register
-                    </h1>
+                    <div>
+                        <h3 class=" mb-3 font-weight-normal blue " style="text-align: center">
+                            Register
+                        </h3>
+                    </div>
                     <div class="form-group">
                         <label for="first_name">First name</label>
                         <input id="first_name" type="text" class="form-control" v-model="first_name" name="first_name"
@@ -39,6 +41,8 @@
                     </div>
                     <button class="btn btn-lg btn-primary btn-block">Register</button>
                 </form>
+                <br>
+                <router-link to="/login" style=" padding-left: 190px; text-decoration: none ">--- Login ----</router-link>
             </div>
         </div>
     </div>

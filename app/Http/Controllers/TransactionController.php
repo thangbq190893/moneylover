@@ -81,7 +81,7 @@ class TransactionController extends Controller
         $secondDate = $request->date2;
         $walletid = $request->walletId;
         $trans = Transaction::betweenDate($walletid, $firstDate, $secondDate);
-        if (!isset($trans)) {
+        if (count($trans) ==0) {
             return response()->json(404);
         }
         return response()->json($trans);
