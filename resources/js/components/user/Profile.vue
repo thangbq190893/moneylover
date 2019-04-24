@@ -152,6 +152,7 @@
             },
 
             editPhoto() {
+                this.url = '';
                 document.getElementById('myInput').value = '';
                 this.errors.img = '';
                 this.image = '';

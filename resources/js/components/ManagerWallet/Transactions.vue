@@ -145,7 +145,8 @@
                                            style=" text-align: left; padding-left: 10px">
                                     <p class="red">{{errors.cost}}</p>
                                     <p>Note</p>
-                                    <textarea name="" cols="20" rows="4" class="item" v-model="note" type="text" style="padding-left: 10px"></textarea>
+                                    <textarea name="" cols="20" rows="4" class="item" v-model="note" type="text"
+                                              style="padding-left: 10px"></textarea>
                                 </ul>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -191,7 +192,8 @@
                                     <p class="red">{{errors.cost}}</p>
                                     <p class="red">{{errors.event}}</p>
                                     <p>note</p>
-                                    <textarea name=""  cols="20" rows="4"class="item" v-model="note" type="text" style="padding-left: 10px;"></textarea>
+                                    <textarea name="" cols="20" rows="4" class="item" v-model="note" type="text"
+                                              style="padding-left: 10px;"></textarea>
                                 </ul>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -326,7 +328,12 @@
             getListTransaction(url = this.http) {
                 this.API.get(url)
                     .then((response) => {
-                        this.transact = response.data;
+                        if (response.data == 404) {
+                            this.errors.search = 'No data found for keyword:' + this.getValue;
+                        } else {
+                            this.transact = response.data;
+                            this.currentPage = 1;
+                        }
                     })
             },
 
@@ -438,8 +445,8 @@
             },
 
             createTrans() {
-                this.errors.item_id = "";
-                this.errors.cost = "";
+                this.errors.item_id = '';
+                this.errors.cost = '';
                 let params = {
                     wallet_id: this.$route.params.id,
                     item_id: this.item_id,
@@ -457,6 +464,7 @@
                         this.API.post('/api/transaction', params).then((response) => {
                             if (this.transact instanceof Array) {
                                 this.transact.push(response.data);
+                                this.errors.search = '';
                             }
                         });
                         $('#AddTrans').modal('hide');

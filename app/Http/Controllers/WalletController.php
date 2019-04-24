@@ -34,6 +34,9 @@ class WalletController extends Controller
     {
         $transactions = Wallet::find($id)
             ->walTransactions()->get();
+        if (count($transactions) == 0){
+            return response()->json(404);
+        }
         return response()->json($transactions);
     }
 
