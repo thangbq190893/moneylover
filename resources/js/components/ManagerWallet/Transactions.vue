@@ -145,7 +145,7 @@
                                            style=" text-align: left; padding-left: 10px">
                                     <p class="red">{{errors.cost}}</p>
                                     <p>Note</p>
-                                    <input class="item" v-model="note" type="text" style="padding-left: 10px">
+                                    <textarea name="" cols="20" rows="4" class="item" v-model="note" type="text" style="padding-left: 10px"></textarea>
                                 </ul>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
@@ -191,7 +191,7 @@
                                     <p class="red">{{errors.cost}}</p>
                                     <p class="red">{{errors.event}}</p>
                                     <p>note</p>
-                                    <input class="item" v-model="note" type="text">
+                                    <textarea name=""  cols="20" rows="4"class="item" v-model="note" type="text" style="padding-left: 10px;"></textarea>
                                 </ul>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>

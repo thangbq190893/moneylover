@@ -6,13 +6,13 @@
                 <div class="form-group">
                     <label for="password">New password</label>
                     <input id="password" type="password" class="form-control" v-model="password">
-                    {{errors.password}}
+                    <p class="red">{{errors.password}}</p>
                 </div>
                 <div class="form-group">
                     <label for="confirmationpassword">Confirm password</label>
                     <input id="confirmationpassword" type="password" class="form-control"
                            v-model="password_confirmation">
-                    {{errors.password_confirmation}}
+                    <p class="red">{{errors.password_confirmation}}</p>
                 </div>
                 <button class="btn btn-lg btn-primary btn-block" type="submit">create new password</button>
             </form>

@@ -146,7 +146,7 @@
                             <form action="./api/wallet" method="patch" @submit.prevent="EditWallet()" class="col-lg-7">
                                 <ul class="list-group-item">
                                     <p>Tên Ví</p>
-                                    <input class="item" name="name" v-model="name" type="text">
+                                    <input class="item" name="name" v-model="name" type="text" style="padding-left: 10px">
                                     <p class="red">{{errors.name}}</p>
                                     <p>Total</p>
                                     <input
