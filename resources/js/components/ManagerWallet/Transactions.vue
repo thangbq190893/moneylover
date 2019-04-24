@@ -28,7 +28,13 @@
         <!-- /.card-header -->
         <div class="card-body">
             <div class="dataTables_wrapper dt-bootstrap4">
+
                 <div class="row justify-content-end ">
+                    <div class="col-md-6">
+                        <button class="btn btn-success " @click="NewTransaction">
+                            <i class="fas fa-plus-circle">Add New</i>
+                        </button>
+                    </div>
                     <div class="col-md-6 navbar float-right">
                         From:
                         <datetime class="nav-item" type="date" v-model="date.firstDate" format="yyyy-MM-dd"></datetime>
@@ -83,15 +89,12 @@
                             </tr>
                             </tbody>
                         </table>
-                        <p class="red">{{errors.search}}</p>
-                        <button class="btn btn-success" @click="NewTransaction">
-                            <i class="fas fa-plus-circle">Add New</i>
-                        </button>
+                        <p class="red" style="text-align: center; padding-top: 30px">{{errors.search}}</p>
                     </div>
 
                 </div>
                 <!--pagination-->
-                <div class="row justify-content-center">
+                <div class="row justify-content-center" v-if="!errors.search">
                     <div class="col-lg-auto">
                         <div class="dataTables_paginate paging_simple_numbers " id="example2_paginate">
                             <ul class="pagination">
@@ -114,13 +117,14 @@
         <!-- /.card-body -->
 
         <!-- Modal add Transacstion-->
-        <div class="modal fade" id="AddTrans" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        <div class="modal fade" id="AddTrans" tabindex="-1" role="dialog"
+             data-backdrop="static" aria-labelledby="exampleModalLabel"
              aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Add new transaction</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" @click="closeAddModal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -149,7 +153,7 @@
                                               style="padding-left: 10px"></textarea>
                                 </ul>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-danger" @click="closeAddModal">Close</button>
                                     <button type="submit" class="btn btn-primary">Create</button>
                                 </div>
                             </form>
@@ -161,13 +165,13 @@
         <!--/add transaction -->
 
         <!-- Modal Edit Transacstion-->
-        <div class="modal fade" id="EditTrans" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-             aria-hidden="true">
+        <div class="modal fade" id="EditTrans" tabindex="-1" role="dialog"
+             aria-labelledby="exampleModalLabel" data-backdrop="static" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title">Edit transaction</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <button type="button" class="close" @click="closeEditModal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
@@ -178,17 +182,17 @@
                                 <ul class="list-group item">
                                     <p>Category</p>
                                     <select @change="getItem($event)">
-                                        <option :value="category_id">Please choose category</option>
+                                        <option :value="category_id">{{category_name}}</option>
                                         <option v-for="cat in categories" :value="cat.id">{{cat.name}}</option>
                                     </select>
                                     <p>Item</p>
                                     <select @change="getValueItem($event)">
-                                        <option :value="item_id">{{item_name}}</option>
+                                        <option id="item" :value="item_id">{{item_name}}</option>
                                         <option v-for="it in items" :value="it.id">{{it.name}}</option>
                                     </select>
                                     <p>cost</p>
                                     <input class="form-input input-lg" v-model="cost" v-money="money"
-                                           style="text-align: right">
+                                           style="text-align: left; padding-left: 10px">
                                     <p class="red">{{errors.cost}}</p>
                                     <p class="red">{{errors.event}}</p>
                                     <p>note</p>
@@ -196,7 +200,7 @@
                                               style="padding-left: 10px;"></textarea>
                                 </ul>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-danger" @click="closeEditModal">Close</button>
                                     <button type="submit" class="btn btn-primary">Edit</button>
                                 </div>
                             </form>
@@ -329,7 +333,7 @@
                 this.API.get(url)
                     .then((response) => {
                         if (response.data == 404) {
-                            this.errors.search = 'No data found for keyword:' + this.getValue;
+                            this.errors.search = 'No data found ';
                         } else {
                             this.transact = response.data;
                             this.currentPage = 1;
@@ -417,7 +421,10 @@
                 this.errors.cost = '';
                 this.getListCategory();
                 if (window.$cookies.get('token')) {
-                    $('#AddTrans').modal('show')
+                    $('#AddTrans').modal({
+                        backdrop: 'static',
+                        keyboard: false  // to prevent closing with Esc button (if you want this too)
+                    },'show');
                 } else {
                     alert("phien lam viec qua han");
                     this.$router.push('/login');
@@ -467,6 +474,7 @@
                                 this.errors.search = '';
                             }
                         });
+                        this.getFullItem();
                         $('#AddTrans').modal('hide');
                     } else {
                         alert("phien lam viec qua han");
@@ -475,23 +483,34 @@
                     }
                 }
             },
+            closeAddModal(){
+                this.getFullItem();
+                $('#AddTrans').modal('hide');
+            },
 
             // Update transaction
             editModal(trans_id, id) {
                 if (window.$cookies.get('token')) {
+                    this.items = [];
+                    this.getFullItem();
                     this.categories = [];
                     this.getListCategory();
+                    this.item_id = '';
                     this.errors.cost = "";
                     this.n = id + (this.currentPage - 1) * this.pageSize;
                     this.trans_id = trans_id;
                     this.API.get('/api/transaction/' + trans_id)
                         .then((response) => {
                                 this.category_id = response.data.category_id;
+                                this.category_name = response.data.category_name;
                                 this.item_name = response.data.item;
                                 this.item_id = response.data.item_id;
                                 this.cost = response.data.cost;
                                 this.note = response.data.note;
-                                $('#EditTrans').modal('show');
+                            $('#EditTrans').modal({
+                                backdrop: 'static',
+                                keyboard: false  // to prevent closing with Esc button (if you want this too)
+                            },'show');
                             }
                         )
                 } else {
@@ -517,6 +536,7 @@
                             const trs = response.data;
                             this.transact.splice(this.n, 1);
                             this.transact.push(trs);
+                            this.getFullItem();
                         });
                         $('#EditTrans').modal('hide');
                     } else {
@@ -525,6 +545,10 @@
                         this.$router.push('/login');
                     }
                 }
+            },
+            closeEditModal() {
+                this.getFullItem();
+                $('#EditTrans').modal('hide');
             },
 
             // Delete transaction

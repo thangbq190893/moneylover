@@ -15,7 +15,12 @@ class WalletController extends Controller
     {
         $user = Auth::user();
         $wallet = Wallet::where('user_id', $user->id)->get();
-        return response()->json($wallet);
+        if (count($wallet) == 0) {
+            return response()->json(404);
+        } else {
+            return response()->json($wallet);
+        }
+
     }
 
     public function store(WalletRequest $request)
@@ -34,7 +39,7 @@ class WalletController extends Controller
     {
         $transactions = Wallet::find($id)
             ->walTransactions()->get();
-        if (count($transactions) == 0){
+        if (count($transactions) == 0) {
             return response()->json(404);
         }
         return response()->json($transactions);

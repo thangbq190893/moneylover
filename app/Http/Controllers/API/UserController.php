@@ -74,5 +74,14 @@ class UserController extends Controller
         $user->save();
         return response()->json(['success' => 'You have successfully upload image.', 'image' => $imageName]);
     }
-}
 
+    public function storeImg(Request $request)
+    {
+        $user = Auth::user();
+        $imageName = time().'.'.$request->file->getClientOriginalExtension();
+        $request->file->move(public_path('images'), $imageName);
+        $user->photo = $imageName;
+        $user->save();
+        return response()->json($imageName);
+    }
+}

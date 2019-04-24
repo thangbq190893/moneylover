@@ -6,6 +6,7 @@
                 <i class="fas fa-plus-circle">&nbsp; Edit photo</i>
             </button>
         </div>
+
         <table class="table col-md-7 mx-auto">
             <tbody>
             <tr>
@@ -152,6 +153,7 @@
             },
 
             editPhoto() {
+
                 this.url = '';
                 document.getElementById('myInput').value = '';
                 this.errors.img = '';

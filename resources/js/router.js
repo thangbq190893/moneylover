@@ -8,6 +8,7 @@ import Transaction from './components/ManagerWallet/Transactions.vue'
 import DonutChart from './components/ActivityGrap/DonutChart.vue';
 import Profile from './components/user/Profile.vue';
 import RecoverPassword from './components/user/RecoverPassword.vue';
+import Test from './components/user/uploader.vue';
 
 Vue.use(Router);
 
@@ -59,6 +60,11 @@ const router = new Router({
             path: '/chart',
             name: 'chart',
             component: DonutChart,
+            meta: {requiresAuth: true}
+        }, {
+            path: '/test',
+            name: 'test',
+            component: Test,
             meta: {requiresAuth: true}
         }
     ],

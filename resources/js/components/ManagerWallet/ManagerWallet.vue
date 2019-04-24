@@ -16,7 +16,10 @@
                 </div>
                 <div class="row">
                     <div class="col-sm-12">
-                        <table class="table table-bordered table-hover dataTable" role="grid">
+                        <button class="btn btn-success" @click="NewModal">
+                            <i class="fas fa-plus-circle">Add New</i>
+                        </button>
+                        <table class="table table-bordered table-hover dataTable" role="grid" v-if="!errors.wallet">
                             <thead>
                             <tr role="row" class="alert-danger font-weight-bolder">
                                 <th @click="sort('id')">
@@ -62,12 +65,9 @@
                             </tr>
                             </tbody>
                         </table>
-                        <button class="btn btn-success" @click="NewModal">
-                            <i class="fas fa-plus-circle">Add New</i>
-                        </button>
                     </div>
                 </div>
-                <div class="row justify-content-center">
+                <div class="row justify-content-center" v-if="!errors.wallet">
                     <div class="col-lg-auto">
                         <div class="dataTables_paginate paging_simple_numbers " id="example2_paginate">
                             <ul class="pagination">
@@ -104,7 +104,8 @@
                             <form action="./api/wallet" method="post" @submit.prevent="addWallet()" class="col-lg-6">
                                 <ul class="list-group-item">
                                     <p>Tên Ví</p>
-                                    <input class="item" name="name" v-model="name" type="text" style="padding-left: 10px">
+                                    <input class="item" name="name" v-model="name" type="text"
+                                           style="padding-left: 10px">
                                     <p class="red">{{errors.name}}</p>
                                     <p>Total </p>
                                     <input
@@ -121,8 +122,8 @@
                                     <p class="red">{{errors.curency_id}}</p>
                                 </ul>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                                     <button type="submit" class="btn btn-primary">Create</button>
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                                 </div>
                             </form>
                         </div>
@@ -146,14 +147,15 @@
                             <form action="./api/wallet" method="patch" @submit.prevent="EditWallet()" class="col-lg-7">
                                 <ul class="list-group-item">
                                     <p>Tên Ví</p>
-                                    <input class="item" name="name" v-model="name" type="text" style="padding-left: 10px">
+                                    <input class="item" name="name" v-model="name" type="text"
+                                           style="padding-left: 10px">
                                     <p class="red">{{errors.name}}</p>
                                     <p>Total</p>
                                     <input
                                             class="form-input input-lg"
                                             v-model="cash"
                                             v-money="money"
-                                            style="text-align: right">{{currency_name}}
+                                            style="text-align: left">{{currency_name}}
                                     <p class="red">{{errors.cash}}</p>
                                 </ul>
                                 <div class="modal-footer">
@@ -199,6 +201,7 @@
                     masked: false /* doesn't work with directive */
                 },
                 errors: {
+                    wallet: '',
                     name: '',
                     cash: '',
                     curency_id: ''
@@ -258,6 +261,19 @@
         },
 
         methods: {
+            // get list transaction in wallet
+            getListWallet() {
+                this.API.get('/api/wallet')
+                    .then((response) => {
+                        if (response.data== 404){
+                            this.errors.wallet = 'do not have wallet';
+                        }else {
+                            this.wallets = response.data;
+                            this.currentPage = 1;
+                        }
+                    })
+            },
+
             formatValue(newValue) {
                 return newValue.toString().replace(/\./g, '');
             },
@@ -292,6 +308,7 @@
                     this.getCurrency();
                     this.errors.cash = '';
                     this.errors.name = '';
+                    this.errors.wallet = '';
                     this.errors.curency_id = '';
                     let params = {
                         'name': this.name,
@@ -397,14 +414,6 @@
 
             ListTransaction(id) {
                 this.$router.push({name: 'transactions', params: {id}})
-            },
-
-            // get list transaction in wallet
-            getListWallet() {
-                this.API.get('/api/wallet')
-                    .then((response) => {
-                        this.wallets = response.data;
-                    })
             },
 
             // funtion to sort with asc or desc

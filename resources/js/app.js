@@ -16,7 +16,10 @@ import 'vue-css-donut-chart/dist/vcdonut.css';
 import Datetime from 'vue-datetime';
 import 'vue-datetime/dist/vue-datetime.css';
 import money from 'v-money';
+import vue2Dropzone from 'vue2-dropzone';
+import 'vue2-dropzone/dist/vue2Dropzone.min.css';
 
+Vue.use(vue2Dropzone);
 Vue.use(Donut);
 Vue.use(VueCookies);
 VueCookies.config(30000);

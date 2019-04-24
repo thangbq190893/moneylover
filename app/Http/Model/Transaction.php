@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transaction extends Model
 {
-    protected $appends = ['walletname', 'item', 'currency_name', 'category_id'];
-    protected $visible = ['id', 'category_id', 'wallet_id', 'cost', 'walletname', 'date', 'item', 'item_id', 'currency_name', 'note'];
+    protected $appends = ['walletname', 'item', 'currency_name', 'category_id','category_name'];
+    protected $visible = ['id', 'category_id', 'wallet_id', 'cost', 'walletname', 'date', 'item', 'item_id', 'currency_name', 'note','category_name'];
     protected $table = 'transactions';
     protected $fillable = ['wallet_id', 'cost', 'date', 'item_id', 'note'];
 
@@ -43,6 +43,10 @@ class Transaction extends Model
     public function getCategoryIdAttribute()
     {
         return ItemHelper::getCategoryId($this->item_id);
+    }
+    public function getCategoryNameAttribute()
+    {
+        return Category::where('id',$this->getCategoryIdAttribute())->first()-> name;
     }
 
     public static function searchTrans($value1, $value2)
