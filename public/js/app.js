@@ -58568,13 +58568,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "uploader",
     data: function data() {
         return {
             isDragging: false,
-            dragCount: 0
+            dragCount: 0,
+            files: [],
+            images: []
 
         };
     },
@@ -58599,13 +58614,33 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             console.log(e);
         },
         OnDrop: function OnDrop(e) {
+            var _this = this;
+
             e.preventDefault();
             e.stopPropagation();
 
             this.isDragging = false;
             var files = e.dataTransfer.files;
 
-            console.log(files);
+            Array.from(files).forEach(function (file) {
+                return _this.addImage(file);
+            });
+        },
+        addImage: function addImage(file) {
+            var _this2 = this;
+
+            if (!file.type.match('image.*')) {
+                console.log(file.name + 'is not an image');
+                return;
+            }
+            this.files.push(file);
+
+            var img = new Image();
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                return _this2.images.push(e.target.result);
+            };
+            reader.readAsDataURL(file);
         }
     }
 });
@@ -58642,22 +58677,83 @@ var render = function() {
                 }
               },
               [
-                _c("i", { staticClass: "fa fa-cloud-upload" }),
+                _c(
+                  "div",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: !_vm.images.length,
+                        expression: "!images.length"
+                      }
+                    ]
+                  },
+                  [
+                    _c("i", { staticClass: "fa fa-cloud-upload" }),
+                    _vm._v(" "),
+                    _c("p", [_vm._v("Drag your images here")]),
+                    _vm._v(" "),
+                    _c("div", [_vm._v("Or")]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "file-input" }, [
+                      _c("label", { attrs: { for: "file" } }, [
+                        _vm._v("Select a file")
+                      ]),
+                      _vm._v(" "),
+                      _c("input", {
+                        attrs: { type: "file", id: "file", multiple: "" },
+                        on: { change: _vm.onInputChange }
+                      })
+                    ])
+                  ]
+                ),
                 _vm._v(" "),
-                _c("p", [_vm._v("Drag your images here")]),
-                _vm._v(" "),
-                _c("div", [_vm._v("Or")]),
-                _vm._v(" "),
-                _c("div", { staticClass: "file-input" }, [
-                  _c("label", { attrs: { for: "file" } }, [
-                    _vm._v("Select a file")
-                  ]),
-                  _vm._v(" "),
-                  _c("input", {
-                    attrs: { type: "file", id: "file", multiple: "" },
-                    on: { change: _vm.onInputChange }
-                  })
-                ])
+                _c(
+                  "div",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.images.length,
+                        expression: "images.length"
+                      }
+                    ],
+                    staticClass: "images-preview"
+                  },
+                  _vm._l(_vm.images, function(image, index) {
+                    return _c(
+                      "div",
+                      { key: index, staticClass: "img-wrapper" },
+                      [
+                        _c("img", {
+                          attrs: {
+                            src: "image",
+                            alt: "Image Uploader" + { index: index }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "details" }, [
+                          _c("span", {
+                            staticClass: "name",
+                            domProps: {
+                              textContent: _vm._s(_vm.files[index].name)
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("span", {
+                            staticClass: "size",
+                            domProps: {
+                              textContent: _vm._s(_vm.files[index].size)
+                            }
+                          })
+                        ])
+                      ]
+                    )
+                  }),
+                  0
+                )
               ]
             )
           ])
