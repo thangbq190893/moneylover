@@ -58581,6 +58581,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "uploader",
@@ -58600,47 +58606,70 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             this.dragCount++;
             this.isDragging = true;
+            return false;
         },
         OnDragLeave: function OnDragLeave(e) {
             e.preventDefault();
-
             this.dragCount--;
-
-            if (this.dragCount <= 0) {
-                this.isDragging = false;
-            }
+            if (this.dragCount <= 0) this.isDragging = false;
         },
         onInputChange: function onInputChange(e) {
-            console.log(e);
-        },
-        OnDrop: function OnDrop(e) {
             var _this = this;
 
-            e.preventDefault();
-            e.stopPropagation();
-
-            this.isDragging = false;
-            var files = e.dataTransfer.files;
-
+            var files = e.target.files;
             Array.from(files).forEach(function (file) {
                 return _this.addImage(file);
             });
         },
-        addImage: function addImage(file) {
+        onDrop: function onDrop(e) {
             var _this2 = this;
 
+            e.preventDefault();
+            e.stopPropagation();
+            this.isDragging = false;
+            var files = e.dataTransfer.files;
+            Array.from(files).forEach(function (file) {
+                return _this2.addImage(file);
+            });
+        },
+        addImage: function addImage(file) {
+            var _this3 = this;
+
             if (!file.type.match('image.*')) {
-                console.log(file.name + 'is not an image');
+                this.$toastr.e(file.name + ' is not an image');
                 return;
             }
             this.files.push(file);
-
-            var img = new Image();
-            var reader = new FileReader();
+            var img = new Image(),
+                reader = new FileReader();
             reader.onload = function (e) {
-                return _this2.images.push(e.target.result);
+                return _this3.images.push(e.target.result);
             };
             reader.readAsDataURL(file);
+        },
+        getFileSize: function getFileSize(size) {
+            var fSExt = ['Bytes', 'KB', 'MB', 'GB'];
+            var i = 0;
+
+            while (size > 900) {
+                size /= 1024;
+                i++;
+            }
+            return Math.round(size * 100) / 100 + ' ' + fSExt[i];
+        },
+        upload: function upload() {
+            var _this4 = this;
+
+            var formData = new FormData();
+
+            this.files.forEach(function (file) {
+                formData.append('images[]', file, file.name);
+            });
+            axios.post('/images-upload', formData).then(function (response) {
+                _this4.$toastr.s('All images uplaoded successfully');
+                _this4.images = [];
+                _this4.files = [];
+            });
         }
     }
 });
@@ -58673,10 +58702,34 @@ var render = function() {
                   dragover: function($event) {
                     $event.preventDefault()
                   },
-                  drop: _vm.OnDrop
+                  drop: _vm.onDrop
                 }
               },
               [
+                _c(
+                  "div",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.images.length,
+                        expression: "images.length"
+                      }
+                    ],
+                    staticClass: "upload-control"
+                  },
+                  [
+                    _c("label", { attrs: { for: "file" } }, [
+                      _vm._v("Select a file")
+                    ]),
+                    _vm._v(" "),
+                    _c("button", { on: { click: _vm.upload } }, [
+                      _vm._v("Upload")
+                    ])
+                  ]
+                ),
+                _vm._v(" "),
                 _c(
                   "div",
                   {
@@ -58694,7 +58747,7 @@ var render = function() {
                     _vm._v(" "),
                     _c("p", [_vm._v("Drag your images here")]),
                     _vm._v(" "),
-                    _c("div", [_vm._v("Or")]),
+                    _c("div", [_vm._v("OR")]),
                     _vm._v(" "),
                     _c("div", { staticClass: "file-input" }, [
                       _c("label", { attrs: { for: "file" } }, [
@@ -58728,10 +58781,7 @@ var render = function() {
                       { key: index, staticClass: "img-wrapper" },
                       [
                         _c("img", {
-                          attrs: {
-                            src: "image",
-                            alt: "Image Uploader" + { index: index }
-                          }
+                          attrs: { src: image, alt: "Image Uplaoder " + index }
                         }),
                         _vm._v(" "),
                         _c("div", { staticClass: "details" }, [
@@ -58745,7 +58795,9 @@ var render = function() {
                           _c("span", {
                             staticClass: "size",
                             domProps: {
-                              textContent: _vm._s(_vm.files[index].size)
+                              textContent: _vm._s(
+                                _vm.getFileSize(_vm.files[index].size)
+                              )
                             }
                           })
                         ])
