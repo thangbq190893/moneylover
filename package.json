@@ -23,7 +23,7 @@
         "@websanova/vue-auth": "^2.21.14-beta",
         "admin-lte": "^3.0.0-alpha.2",
         "apexcharts": "^3.6.7",
-        "chart.js": "^2.8.0",
+        "chart.js": "^2.9.4",
         "luxon": "^1.12.1",
         "v-money": "^0.8.1",
         "vee-validate": "^2.2.3",
